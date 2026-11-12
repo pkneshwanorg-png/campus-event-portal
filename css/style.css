@@ -971,8 +971,10 @@ textarea.form-control {
 }
 
 .footer-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 2.5rem;
   margin-bottom: 2rem;
 }

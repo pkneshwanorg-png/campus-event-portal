@@ -74,7 +74,7 @@ function renderNavbar(activePage) {
     '</div>';
 }
 
-// Render consistent footer with Team Member names across pages
+// Render consistent footer across pages
 function renderFooter() {
   var footerEl = document.getElementById("app-footer");
   if (!footerEl) {
@@ -104,30 +104,10 @@ function renderFooter() {
             '<li><a href="https://github.com" target="_blank" rel="noopener">GitHub Repository</a></li>' +
           '</ul>' +
         '</div>' +
-
-        '<div>' +
-          '<div class="footer-title">Project Team</div>' +
-          '<ul class="team-list">' +
-            '<li class="team-member">' +
-              '<span class="member-avatar">NP</span>' +
-              '<div class="member-info">' +
-                '<span class="member-name">Neshwan PK</span>' +
-                '<span class="member-role">Lead Developer • CSE326</span>' +
-              '</div>' +
-            '</li>' +
-            '<li class="team-member">' +
-              '<span class="member-avatar">LPU</span>' +
-              '<div class="member-info">' +
-                '<span class="member-name">Team CSE326</span>' +
-                '<span class="member-role">Web Development CA1</span>' +
-              '</div>' +
-            '</li>' +
-          '</ul>' +
-        '</div>' +
       '</div>' +
 
       '<div class="footer-bottom">' +
-        '<div>© 2026 Campus Event Management Portal • Designed & Developed by Neshwan PK & Team</div>' +
+        '<div>© 2026 Campus Event Management Portal • All rights reserved.</div>' +
         '<div>Pure Vanilla HTML5 / CSS3 / JavaScript</div>' +
       '</div>' +
     '</div>';
