@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizer & Admin Dashboard - Campus Events</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Chart.js from CDN for clean analytics viva demonstration -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Global Header -->
+  <header id="app-navbar" class="navbar"></header>
+
+  <main class="container" style="padding: 2.25rem 1.25rem 4rem;">
+
+    <!-- Dashboard Header Title & Action -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem;">
+      <div>
+        <h1 style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.02em;">Organizer Admin Dashboard</h1>
+        <p class="text-muted" style="margin-top: 0.2rem;">Manage campus events, track registrations in real-time, and download participant lists.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openCreateEventModal()">+ Create New Event</button>
+    </div>
+
+    <!-- Quick Stats Metric Cards -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Events</div>
+        <div class="stat-value" id="stat-total-events">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Registrations</div>
+        <div class="stat-value" id="stat-total-regs">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Seat Capacity</div>
+        <div class="stat-value" id="stat-total-capacity">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Overall Occupancy</div>
+        <div class="stat-value" id="stat-occupancy-rate">0%</div>
+      </div>
+    </section>
+
+    <!-- Visual Chart Section -->
+    <section style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.75rem; margin-bottom: 2.25rem; box-shadow: var(--shadow-sm);">
+      <h3 style="margin-bottom: 1rem; font-size: 1.18rem; font-weight: 700;">📊 Seats Filled per Event (Live Capacity Utilization)</h3>
+      <div style="position: relative; height: 280px; width: 100%;">
+        <canvas id="seatsChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Manage Events Table -->
+    <section style="margin-bottom: 2.5rem;">
+      <h3 style="margin-bottom: 1rem; font-size: 1.22rem; font-weight: 700;">All Campus Events</h3>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Date & Time</th>
+              <th>Venue</th>
+              <th>Seats Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-events-tbody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Participants Directory & Export Section -->
+    <section style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.75rem; box-shadow: var(--shadow-sm);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.35rem;">
+        <div>
+          <h3 style="font-size: 1.22rem; font-weight: 700;">Registered Participants Directory</h3>
+          <p class="text-muted" style="font-size: 0.88rem; margin-top: 0.2rem;">Filter by event to view attendees or download CSV for attendance rolls.</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+          <select id="export-event-select" class="form-control" style="width: auto; min-width: 200px;" onchange="handleParticipantFilterChange()">
+            <option value="ALL">All Events (Consolidated)</option>
+          </select>
+          <button class="btn btn-success btn-sm" onclick="exportParticipantsToCSV()">📥 Export as CSV</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ticket ID</th>
+              <th>Reg. Number</th>
+              <th>Student Name</th>
+              <th>Email</th>
+              <th>Event Title</th>
+              <th>Booked At</th>
+            </tr>
+          </thead>
+          <tbody id="admin-participants-tbody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Create / Edit Event Modal -->
+  <div id="event-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="event-modal-title">Create New Event</h3>
+        <button class="modal-close" onclick="closeEventModal()">&times;</button>
+      </div>
+      <form id="event-editor-form" onsubmit="handleSaveEvent(event)">
+        <div class="modal-body">
+          <input type="hidden" id="form-event-id">
+
+          <div class="form-group">
+            <label class="form-label" for="form-title">Event Title *</label>
+            <input type="text" id="form-title" class="form-control" placeholder="e.g. National Hackathon 2026" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="form-category">Category *</label>
+              <select id="form-category" class="form-control" required>
+                <option value="Technical">Technical</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Cultural">Cultural</option>
+                <option value="Sports">Sports</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="form-capacity">Total Capacity (Seats) *</label>
+              <input type="number" id="form-capacity" class="form-control" min="1" max="1000" placeholder="50" required>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="form-date">Event Date *</label>
+              <input type="date" id="form-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="form-time">Time (e.g. 10:00 AM) *</label>
+              <input type="text" id="form-time" class="form-control" placeholder="10:00 AM" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-venue">Venue *</label>
+            <input type="text" id="form-venue" class="form-control" placeholder="Auditorium / Lab / Ground" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-eligibility">Eligibility *</label>
+            <input type="text" id="form-eligibility" class="form-control" placeholder="e.g. Open to all branches" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-desc">Description *</label>
+            <textarea id="form-desc" class="form-control" rows="3" placeholder="Provide event schedule and overview..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save-event-submit-btn">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- Footer with Team Names -->
+  <footer id="app-footer" class="site-footer"></footer>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/registration.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+    var chartInstance = null;
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // Role enforcement: ensure user is admin
+      var user = getCurrentUser();
+      if (!user || user.role !== "admin") {
+        setCurrentUser({ role: "admin", name: "Campus Organizer" });
+      }
+
+      renderNavbar("admin");
+      renderFooter();
+      refreshDashboard();
+    });
+
+    // Refresh all tables, statistics, and chart
+    function refreshDashboard() {
+      renderStats();
+      renderEventsTable();
+      populateEventDropdown();
+      renderParticipantsTable();
+      renderSeatsChart();
+    }
+
+    // Calculate and display top 4 stat cards
+    function renderStats() {
+      var events = getAllEvents();
+      var registrations = getStoredRegistrations();
+
+      var totalCapacity = 0;
+      for (var i = 0; i < events.length; i++) {
+        totalCapacity += parseInt(events[i].capacity, 10) || 0;
+      }
+
+      var rate = totalCapacity > 0 ? Math.round((registrations.length / totalCapacity) * 100) : 0;
+
+      document.getElementById("stat-total-events").textContent = events.length;
+      document.getElementById("stat-total-regs").textContent = registrations.length;
+      document.getElementById("stat-total-capacity").textContent = totalCapacity;
+      document.getElementById("stat-occupancy-rate").textContent = rate + "%";
+    }
+
+    // Render Events Management Table
+    function renderEventsTable() {
+      var tbody = document.getElementById("admin-events-tbody");
+      var events = getAllEvents();
+
+      if (events.length === 0) {
+        tbody.innerHTML = 
+          '<tr><td colspan="6">' +
+            renderEmptyState({
+              icon: "📅",
+              title: "No events yet",
+              desc: "Get started by creating your first campus event.",
+              actionBtn: '<button class="btn btn-primary btn-sm" onclick="openCreateEventModal()">+ Create Event</button>'
+            }) +
+          '</td></tr>';
+        return;
+      }
+
+      var rows = "";
+      for (var i = 0; i < events.length; i++) {
+        var ev = events[i];
+        var seats = getSeatsInfo(ev.id);
+        var seatBadge = seats.isFull
+          ? '<span class="event-badge badge-full">Full (' + seats.registered + '/' + seats.capacity + ')</span>'
+          : '<span class="event-badge badge-open">' + seats.registered + ' / ' + seats.capacity + ' booked (' + seats.left + ' left)</span>';
+
+        rows += 
+          '<tr>' +
+            '<td><strong>' + ev.title + '</strong></td>' +
+            '<td><span class="event-badge">' + ev.category + '</span></td>' +
+            '<td>' + ev.date + ' at ' + ev.time + '</td>' +
+            '<td>' + ev.venue + '</td>' +
+            '<td>' + seatBadge + '</td>' +
+            '<td>' +
+              '<div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">' +
+                '<button class="btn btn-secondary btn-sm" onclick="openEditEventModal(\'' + ev.id + '\')">Edit</button>' +
+                '<button class="btn btn-danger btn-sm" onclick="handleDeleteEvent(\'' + ev.id + '\')">Delete</button>' +
+              '</div>' +
+            '</td>' +
+          '</tr>';
+      }
+      tbody.innerHTML = rows;
+    }
+
+    // Populate the dropdown to filter participants by event
+    function populateEventDropdown() {
+      var select = document.getElementById("export-event-select");
+      var events = getAllEvents();
+      var currentVal = select.value || "ALL";
+
+      var opts = '<option value="ALL">All Events (Consolidated)</option>';
+      for (var i = 0; i < events.length; i++) {
+        opts += '<option value="' + events[i].id + '">' + events[i].title + '</option>';
+      }
+      select.innerHTML = opts;
+      select.value = currentVal;
+    }
+
+    // Render registered participants list
+    function renderParticipantsTable() {
+      var tbody = document.getElementById("admin-participants-tbody");
+      var selectedEventId = document.getElementById("export-event-select").value;
+      var registrations = getStoredRegistrations();
+
+      var filtered = [];
+      for (var i = 0; i < registrations.length; i++) {
+        if (selectedEventId === "ALL" || registrations[i].eventId === selectedEventId) {
+          filtered.push(registrations[i]);
+        }
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = 
+          '<tr><td colspan="6">' +
+            renderEmptyState({
+              icon: "👥",
+              title: "No participants registered yet",
+              desc: "No student registrations found for this filter selection."
+            }) +
+          '</td></tr>';
+        return;
+      }
+
+      var rows = "";
+      for (var j = 0; j < filtered.length; j++) {
+        var r = filtered[j];
+        var ev = getEventById(r.eventId) || { title: "Deleted Event" };
+        var formattedDate = r.registeredAt ? new Date(r.registeredAt).toLocaleDateString() : "N/A";
+
+        rows += 
+          '<tr>' +
+            '<td><strong><code>' + r.ticketId + '</code></strong></td>' +
+            '<td>' + r.regNo + '</td>' +
+            '<td><strong>' + r.name + '</strong></td>' +
+            '<td>' + r.email + '</td>' +
+            '<td>' + ev.title + '</td>' +
+            '<td>' + formattedDate + '</td>' +
+          '</tr>';
+      }
+      tbody.innerHTML = rows;
+    }
+
+    function handleParticipantFilterChange() {
+      renderParticipantsTable();
+    }
+
+    // Modal Opening & Editing
+    function openCreateEventModal() {
+      document.getElementById("event-editor-form").reset();
+      document.getElementById("form-event-id").value = "";
+      document.getElementById("event-modal-title").textContent = "Create New Event";
+      document.getElementById("event-modal").classList.add("active");
+    }
+
+    function openEditEventModal(eventId) {
+      var ev = getEventById(eventId);
+      if (!ev) return;
+
+      document.getElementById("form-event-id").value = ev.id;
+      document.getElementById("form-title").value = ev.title;
+      document.getElementById("form-category").value = ev.category;
+      document.getElementById("form-capacity").value = ev.capacity;
+      document.getElementById("form-date").value = ev.date;
+      document.getElementById("form-time").value = ev.time;
+      document.getElementById("form-venue").value = ev.venue;
+      document.getElementById("form-eligibility").value = ev.eligibility;
+      document.getElementById("form-desc").value = ev.description;
+
+      document.getElementById("event-modal-title").textContent = "Edit Event Details";
+      document.getElementById("event-modal").classList.add("active");
+    }
+
+    function closeEventModal() {
+      document.getElementById("event-modal").classList.remove("active");
+    }
+
+    // Save or update event
+    function handleSaveEvent(e) {
+      e.preventDefault();
+      var id = document.getElementById("form-event-id").value;
+      var eventData = {
+        title: document.getElementById("form-title").value.trim(),
+        category: document.getElementById("form-category").value,
+        capacity: parseInt(document.getElementById("form-capacity").value, 10),
+        date: document.getElementById("form-date").value,
+        time: document.getElementById("form-time").value.trim(),
+        venue: document.getElementById("form-venue").value.trim(),
+        eligibility: document.getElementById("form-eligibility").value.trim(),
+        description: document.getElementById("form-desc").value.trim()
+      };
+
+      if (id) {
+        eventData.id = id;
+        var updateRes = updateEvent(eventData);
+        if (updateRes.success) {
+          showToast(updateRes.message, "success");
+        } else {
+          showToast(updateRes.message, "danger");
+        }
+      } else {
+        var createRes = createEvent(eventData);
+        if (createRes.success) {
+          showToast(createRes.message, "success");
+        } else {
+          showToast(createRes.message, "danger");
+        }
+      }
+
+      closeEventModal();
+      refreshDashboard();
+    }
+
+    // Delete Event
+    function handleDeleteEvent(eventId) {
+      if (!confirm("Are you sure you want to delete this event? All associated registrations will also be removed.")) {
+        return;
+      }
+      var res = deleteEvent(eventId);
+      if (res.success) {
+        showToast(res.message, "success");
+        refreshDashboard();
+      } else {
+        showToast(res.message, "danger");
+      }
+    }
+
+    // Render Chart.js Stacked Bar Chart for Seat Analytics
+    function renderSeatsChart() {
+      var events = getAllEvents();
+      var labels = [];
+      var bookedData = [];
+      var availableData = [];
+
+      for (var i = 0; i < events.length; i++) {
+        var ev = events[i];
+        var s = getSeatsInfo(ev.id);
+        labels.push(ev.title.length > 20 ? ev.title.substring(0, 20) + "..." : ev.title);
+        bookedData.push(s.registered);
+        availableData.push(s.left);
+      }
+
+      var ctx = document.getElementById("seatsChart").getContext("2d");
+
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Booked Seats",
+              data: bookedData,
+              backgroundColor: "#2563eb",
+              borderRadius: 6
+            },
+            {
+              label: "Available Seats",
+              data: availableData,
+              backgroundColor: "#cbd5e1",
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              stacked: true,
+              grid: { display: false }
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              ticks: { precision: 0 }
+            }
+          },
+          plugins: {
+            legend: { position: "bottom" }
+          }
+        }
+      });
+    }
+
+    // Export Participants as CSV file
+    function exportParticipantsToCSV() {
+      var selectedEventId = document.getElementById("export-event-select").value;
+      var registrations = getStoredRegistrations();
+
+      var filtered = [];
+      for (var i = 0; i < registrations.length; i++) {
+        if (selectedEventId === "ALL" || registrations[i].eventId === selectedEventId) {
+          filtered.push(registrations[i]);
+        }
+      }
+
+      if (filtered.length === 0) {
+        showToast("No participant data to export!", "warning");
+        return;
+      }
+
+      var csvRows = [];
+      csvRows.push(["Ticket ID", "Registration No", "Student Name", "Email", "Event Title", "Date Registered"].join(","));
+
+      for (var j = 0; j < filtered.length; j++) {
+        var r = filtered[j];
+        var ev = getEventById(r.eventId) || { title: "N/A" };
+        var cleanTitle = '"' + ev.title.replace(/"/g, '""') + '"';
+        var cleanName = '"' + r.name.replace(/"/g, '""') + '"';
+
+        csvRows.push([
+          r.ticketId,
+          r.regNo,
+          cleanName,
+          r.email,
+          cleanTitle,
+          r.registeredAt
+        ].join(","));
+      }
+
+      var csvString = csvRows.join("\n");
+      var blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "campus_event_participants_" + Date.now() + ".csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast("CSV exported successfully!", "success");
+    }
+  </script>
+</body>
+</html>

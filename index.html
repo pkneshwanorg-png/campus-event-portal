@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Event Management & Registration Portal</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Global Navigation Header -->
+  <header id="app-navbar" class="navbar"></header>
+
+  <!-- Hero Welcome Banner -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-pill">🏛️ Official Campus Event Hub</div>
+      <h1 class="hero-title">Discover, Attend & Excel in Campus Events</h1>
+      <p class="hero-subtitle">
+        Your one-stop college portal to explore technical hackathons, cultural fests, hands-on workshops, and sports tournaments.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="container">
+
+    <!-- Normal Event Explorer View -->
+    <div id="events-view">
+      <!-- Search and Filter Bar -->
+      <section class="filter-bar">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="search-input" 
+            class="filter-input with-icon" 
+            placeholder="Search events by title, description, or venue..." 
+            oninput="handleFilterChange()"
+          >
+        </div>
+        <div style="flex: 0 1 200px;">
+          <select id="category-filter" class="filter-input" onchange="handleFilterChange()">
+            <option value="ALL">All Categories</option>
+            <option value="Technical">Technical</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Cultural">Cultural</option>
+            <option value="Sports">Sports</option>
+          </select>
+        </div>
+        <div style="flex: 0 1 200px;">
+          <select id="availability-filter" class="filter-input" onchange="handleFilterChange()">
+            <option value="ALL">All Status</option>
+            <option value="OPEN">Available Seats Only</option>
+            <option value="FULL">Sold Out / Full</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Events Listing Grid -->
+      <div id="events-container" class="events-grid">
+        <!-- Event cards or empty-state injected dynamically -->
+      </div>
+    </div>
+
+    <!-- Student "My Registrations" View -->
+    <div id="my-registrations-view" style="display: none; padding: 2.5rem 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2>My Event Registrations</h2>
+          <p class="text-muted" id="student-info-heading">Track your booked tickets and active campus passes.</p>
+        </div>
+        <a href="index.html" class="btn btn-secondary btn-sm">← Back to All Events</a>
+      </div>
+
+      <div id="my-registrations-container">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Event Title</th>
+                <th>Date & Time</th>
+                <th>Venue</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="my-registrations-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Student Login Modal -->
+  <div id="student-login-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Student Login / Identification</h3>
+        <button class="modal-close" onclick="closeStudentLoginModal()">&times;</button>
+      </div>
+      <form id="student-login-form" onsubmit="handleStudentLogin(event)">
+        <div class="modal-body">
+          <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">
+            Enter your college Registration Number to view your registered events or quickly book passes.
+          </p>
+          <div class="form-group">
+            <label class="form-label" for="login-reg-no">Registration Number (e.g. 123001)</label>
+            <input type="text" id="login-reg-no" class="form-control" placeholder="Enter Registration No." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="login-name">Full Name</label>
+            <input type="text" id="login-name" class="form-control" placeholder="Enter your full name" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeStudentLoginModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Login / Continue</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div id="admin-login-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Organizer / Admin Login</h3>
+        <button class="modal-close" onclick="closeAdminLoginModal()">&times;</button>
+      </div>
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+        <div class="modal-body">
+          <div style="background-color: #f1f5f9; padding: 0.85rem 1rem; border-radius: var(--radius-sm); font-size: 0.86rem; margin-bottom: 1.25rem; border: 1px solid var(--border-color);">
+            <strong>Demo Credentials:</strong><br>
+            Username: <code>admin</code><br>
+            Password: <code>admin123</code>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-user">Username</label>
+            <input type="text" id="admin-user" class="form-control" placeholder="Username" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-pass">Password</label>
+            <input type="password" id="admin-pass" class="form-control" placeholder="Password" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAdminLoginModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Sign In as Admin</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Footer with Team Names -->
+  <footer id="app-footer" class="site-footer"></footer>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/registration.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+    // Initialize page on load
+    document.addEventListener("DOMContentLoaded", function() {
+      // Check if URL query asks for "my-registrations" view
+      var urlParams = new URLSearchParams(window.location.search);
+      var view = urlParams.get("view");
+
+      if (view === "my-registrations") {
+        renderNavbar("my-registrations");
+        showMyRegistrationsView();
+      } else {
+        renderNavbar("events");
+        renderEventsList();
+      }
+
+      // Render shared footer with team members
+      renderFooter();
+    });
+
+    // Render filtered list of events into the grid
+    function renderEventsList() {
+      var container = document.getElementById("events-container");
+      if (!container) return;
+
+      var allEvents = getAllEvents();
+
+      // Absolute empty state if no events exist in storage
+      if (allEvents.length === 0) {
+        container.innerHTML = renderEmptyState({
+          icon: "📅",
+          title: "No events yet",
+          desc: "There are currently no events published on campus. Check back soon or log in as Organizer to add new ones.",
+          actionBtn: '<button class="btn btn-primary btn-sm" onclick="openAdminLoginModal()">Organizer Portal</button>'
+        });
+        return;
+      }
+
+      var searchVal = (document.getElementById("search-input").value || "").toLowerCase().trim();
+      var categoryVal = document.getElementById("category-filter").value;
+      var availabilityVal = document.getElementById("availability-filter").value;
+
+      var filtered = [];
+      for (var i = 0; i < allEvents.length; i++) {
+        var ev = allEvents[i];
+        var matchesSearch = (
+          ev.title.toLowerCase().indexOf(searchVal) !== -1 ||
+          ev.description.toLowerCase().indexOf(searchVal) !== -1 ||
+          ev.venue.toLowerCase().indexOf(searchVal) !== -1
+        );
+
+        var matchesCategory = (categoryVal === "ALL" || ev.category === categoryVal);
+
+        var seats = getSeatsInfo(ev.id);
+        var matchesAvailability = true;
+        if (availabilityVal === "OPEN") {
+          matchesAvailability = !seats.isFull;
+        } else if (availabilityVal === "FULL") {
+          matchesAvailability = seats.isFull;
+        }
+
+        if (matchesSearch && matchesCategory && matchesAvailability) {
+          filtered.push(ev);
+        }
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = renderEmptyState({
+          icon: "🔍",
+          title: "No events match your criteria",
+          desc: "We couldn't find any campus events matching your active search filters. Try clearing your search keyword or switching categories.",
+          actionBtn: '<button class="btn btn-secondary btn-sm" onclick="resetFilters()">Reset Filters</button>'
+        });
+        return;
+      }
+
+      var html = "";
+      for (var j = 0; j < filtered.length; j++) {
+        html += renderEventCard(filtered[j]);
+      }
+      container.innerHTML = html;
+    }
+
+    // Reset filters
+    function resetFilters() {
+      document.getElementById("search-input").value = "";
+      document.getElementById("category-filter").value = "ALL";
+      document.getElementById("availability-filter").value = "ALL";
+      renderEventsList();
+    }
+
+    // Called when user types in search or changes filter dropdown
+    function handleFilterChange() {
+      renderEventsList();
+    }
+
+    // Switch view to display Student Registrations
+    function showMyRegistrationsView() {
+      var user = getCurrentUser();
+      if (!user || user.role !== "student") {
+        openStudentLoginModal();
+        return;
+      }
+
+      document.getElementById("events-view").style.display = "none";
+      document.getElementById("my-registrations-view").style.display = "block";
+      document.getElementById("student-info-heading").textContent = 
+        "Showing registered events for " + user.name + " (Reg No: " + user.regNo + ")";
+
+      var container = document.getElementById("my-registrations-container");
+      var registrations = getRegistrationsByStudent(user.regNo);
+
+      if (registrations.length === 0) {
+        container.innerHTML = renderEmptyState({
+          icon: "🎟️",
+          title: "No event registrations yet",
+          desc: "You haven't reserved tickets for any campus events. Explore upcoming workshops, hackathons, and sports events to get your pass!",
+          actionBtn: '<a href="index.html" class="btn btn-primary btn-sm">Explore Upcoming Events →</a>'
+        });
+        return;
+      }
+
+      var tableHtml = 
+        '<div class="table-responsive">' +
+          '<table class="data-table">' +
+            '<thead>' +
+              '<tr>' +
+                '<th>Ticket ID</th>' +
+                '<th>Event Title</th>' +
+                '<th>Date & Time</th>' +
+                '<th>Venue</th>' +
+                '<th>Action</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody id="my-registrations-tbody">';
+
+      for (var i = 0; i < registrations.length; i++) {
+        var reg = registrations[i];
+        var event = getEventById(reg.eventId) || { title: "Unknown Event", date: "N/A", time: "N/A", venue: "N/A" };
+        tableHtml += 
+          '<tr>' +
+            '<td><strong><code>' + reg.ticketId + '</code></strong></td>' +
+            '<td><strong>' + event.title + '</strong></td>' +
+            '<td>' + event.date + ' at ' + event.time + '</td>' +
+            '<td>' + event.venue + '</td>' +
+            '<td>' +
+              '<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">' +
+                '<a href="event.html?id=' + encodeURIComponent(reg.eventId) + '&ticketId=' + encodeURIComponent(reg.ticketId) + '" class="btn btn-secondary btn-sm">View Ticket</a>' +
+                '<button class="btn btn-danger btn-sm" onclick="handleCancelMyRegistration(\'' + reg.ticketId + '\')">Cancel</button>' +
+              '</div>' +
+            '</td>' +
+          '</tr>';
+      }
+
+      tableHtml += '</tbody></table></div>';
+      container.innerHTML = tableHtml;
+    }
+
+    // Handle student cancelling their registration
+    function handleCancelMyRegistration(ticketId) {
+      if (!confirm("Are you sure you want to cancel this registration? Your seat will be freed up for other students.")) {
+        return;
+      }
+      var res = cancelRegistration(ticketId);
+      if (res.success) {
+        showToast(res.message, "success");
+        showMyRegistrationsView();
+      } else {
+        showToast(res.message, "danger");
+      }
+    }
+
+    // Modal helpers
+    function openStudentLoginModal() {
+      document.getElementById("student-login-modal").classList.add("active");
+    }
+    function closeStudentLoginModal() {
+      document.getElementById("student-login-modal").classList.remove("active");
+    }
+
+    function openAdminLoginModal() {
+      document.getElementById("admin-login-modal").classList.add("active");
+    }
+    function closeAdminLoginModal() {
+      document.getElementById("admin-login-modal").classList.remove("active");
+    }
+
+    // Form handlers
+    function handleStudentLogin(e) {
+      e.preventDefault();
+      var regNo = document.getElementById("login-reg-no").value.trim();
+      var name = document.getElementById("login-name").value.trim();
+
+      if (!regNo || !name) {
+        showToast("Please provide both Registration No and Name", "danger");
+        return;
+      }
+
+      setCurrentUser({
+        role: "student",
+        regNo: regNo,
+        name: name
+      });
+
+      closeStudentLoginModal();
+      showToast("Welcome, " + name + "!", "success");
+      setTimeout(function() {
+        window.location.href = "index.html?view=my-registrations";
+      }, 500);
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      var u = document.getElementById("admin-user").value.trim();
+      var p = document.getElementById("admin-pass").value.trim();
+
+      // Demo login check
+      if (u === "admin" && p === "admin123") {
+        setCurrentUser({ role: "admin", name: "Campus Organizer" });
+        closeAdminLoginModal();
+        showToast("Signed in as Administrator", "success");
+        setTimeout(function() {
+          window.location.href = "admin.html";
+        }, 500);
+      } else {
+        showToast("Invalid credentials! Demo username is admin, password is admin123", "danger");
+      }
+    }
+  </script>
+</body>
+</html>
