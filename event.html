@@ -12,51 +12,51 @@
   <!-- Global Header -->
   <header id="app-navbar" class="navbar"></header>
 
-  <main class="container" style="padding-top: 2.25rem; padding-bottom: 3.5rem;">
+  <main class="container" style="padding-top: 2rem; padding-bottom: 3.5rem;">
 
     <!-- Back Navigation Bar -->
     <div style="margin-bottom: 1.5rem;" class="no-print">
-      <a href="index.html" class="btn btn-secondary btn-sm">← Back to All Events</a>
+      <a href="index.html" class="btn btn-secondary btn-sm">Back to All Events</a>
     </div>
 
     <!-- Event Detail & Registration Layout Grid -->
-    <div id="event-main-content" style="display: grid; grid-template-columns: 1fr 390px; gap: 2rem; align-items: start;">
+    <div id="event-main-content" style="display: grid; grid-template-columns: 1fr 390px; gap: 1.75rem; align-items: start;">
       
       <!-- Left Column: Event Information -->
-      <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 2.25rem; box-shadow: var(--shadow-sm);">
+      <div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
           <span id="detail-category" class="event-badge badge-tech">Technical</span>
           <span id="detail-status-badge" class="event-badge badge-open">Checking seats...</span>
         </div>
 
-        <h1 id="detail-title" style="font-size: 1.95rem; font-weight: 800; margin-bottom: 1.25rem; letter-spacing: -0.02em;">Loading Event...</h1>
+        <h1 id="detail-title" style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.25rem;">Loading Event...</h1>
 
-        <div class="event-meta" style="font-size: 0.95rem; margin-bottom: 1.75rem; background: #f8fafc; padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); gap: 0.75rem;">
-          <div class="event-meta-item"><span class="event-meta-icon">📅</span> <div><strong>Date & Time:</strong> <span id="detail-datetime"></span></div></div>
-          <div class="event-meta-item"><span class="event-meta-icon">📍</span> <div><strong>Venue:</strong> <span id="detail-venue"></span></div></div>
-          <div class="event-meta-item"><span class="event-meta-icon">🎓</span> <div><strong>Eligibility:</strong> <span id="detail-eligibility"></span></div></div>
+        <div class="event-meta" style="font-size: 0.92rem; margin-bottom: 1.75rem; background: var(--bg); padding: 1.15rem; border-radius: var(--radius); border: 1px solid var(--border); gap: 0.5rem;">
+          <div class="event-meta-item"><span class="event-meta-icon">Date:</span> <div><strong>Date & Time:</strong> <span id="detail-datetime"></span></div></div>
+          <div class="event-meta-item"><span class="event-meta-icon">Venue:</span> <div><strong>Venue:</strong> <span id="detail-venue"></span></div></div>
+          <div class="event-meta-item"><span class="event-meta-icon">For:</span> <div><strong>Eligibility:</strong> <span id="detail-eligibility"></span></div></div>
         </div>
 
-        <h3 style="margin-bottom: 0.75rem; font-size: 1.2rem;">About this Event</h3>
-        <p id="detail-description" style="color: var(--secondary-color); line-height: 1.7; margin-bottom: 1.75rem; white-space: pre-line;"></p>
+        <h3 style="margin-bottom: 0.65rem; font-size: 1.15rem; font-weight: 600;">About this Event</h3>
+        <p id="detail-description" style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; white-space: pre-line;"></p>
 
         <!-- Seat Bar -->
-        <div class="seats-progress" style="margin-top: 1.5rem; background-color: #fafbfc; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
+        <div class="seats-progress" style="margin-top: 1.5rem; background-color: var(--bg); padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border);">
           <div class="seats-label">
             <span>Seat Capacity Utilization</span>
             <span id="detail-seat-text">0 / 0 booked</span>
           </div>
-          <div class="progress-bar-bg" style="height: 10px;">
+          <div class="progress-bar-bg" style="height: 8px;">
             <div id="detail-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
           </div>
         </div>
       </div>
 
       <!-- Right Column: Registration Card -->
-      <div id="registration-card-panel" style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 2rem; box-shadow: var(--shadow-sm); position: sticky; top: 90px;">
-        <h3 style="margin-bottom: 0.4rem; font-size: 1.25rem;">Register for Event</h3>
-        <p class="text-muted" style="font-size: 0.88rem; margin-bottom: 1.35rem; line-height: 1.5;">
-          Reserve your seat in seconds. An official printable admission ticket with QR barcode placeholder is generated automatically.
+      <div id="registration-card-panel" style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; box-shadow: var(--shadow); position: sticky; top: 80px;">
+        <h3 style="margin-bottom: 0.35rem; font-size: 1.2rem; font-weight: 600;">Register for Event</h3>
+        <p class="text-muted" style="font-size: 0.88rem; margin-bottom: 1.25rem; line-height: 1.5;">
+          Enter your details below to reserve your seat and generate your official admission pass.
         </p>
 
         <form id="registration-form" onsubmit="handleRegistrationSubmit(event)">
@@ -78,8 +78,8 @@
           <button type="submit" id="submit-reg-btn" class="btn btn-primary btn-block">Confirm Registration</button>
         </form>
 
-        <div id="registration-closed-alert" style="display: none; padding: 1.25rem; background-color: #fee2e2; color: #991b1b; border-radius: var(--radius-sm); text-align: center; font-size: 0.92rem; font-weight: 600; border: 1px solid #fecaca;">
-          ⛔ Registration Closed. All seats for this event are fully booked!
+        <div id="registration-closed-alert" style="display: none; padding: 1.1rem; background-color: var(--danger-bg); color: var(--danger); border-radius: var(--radius); text-align: center; font-size: 0.92rem; font-weight: 600; border: 1px solid #F8D7DA;">
+          Registration Closed — All seats for this event are fully booked.
         </div>
       </div>
 
@@ -87,16 +87,16 @@
 
     <!-- Confirmation Slip View (Shown after registration or when ticketId is in query) -->
     <div id="confirmation-view" style="display: none; padding: 1rem 0;">
-      <div style="text-align: center; margin-bottom: 1.75rem;" class="no-print">
-        <h2 style="color: var(--success-color); font-size: 1.75rem; margin-bottom: 0.35rem;">🎉 Registration Confirmed!</h2>
-        <p class="text-muted">Here is your official admission slip. Please print or save this ticket.</p>
+      <div style="text-align: center; margin-bottom: 1.5rem;" class="no-print">
+        <h2 style="color: var(--success); font-size: 1.6rem; font-weight: 600; margin-bottom: 0.35rem;">Registration Confirmed</h2>
+        <p class="text-muted">Here is your official admission pass. Please print or save this ticket.</p>
       </div>
 
       <!-- Printable Ticket Area -->
       <div class="ticket-wrapper" id="printable-ticket">
         <div class="ticket-header">
-          <div class="ticket-brand">🏛️ Campus Event Admission Pass</div>
-          <h2 id="ticket-event-title" style="margin-top: 0.35rem; font-size: 1.35rem;">Event Title</h2>
+          <div class="ticket-brand">Campus Event Admission Pass</div>
+          <h2 id="ticket-event-title" style="margin-top: 0.35rem; font-size: 1.3rem; font-weight: 600;">Event Title</h2>
           <div class="ticket-code" id="ticket-id-display">TCK-000000</div>
         </div>
 
@@ -128,14 +128,14 @@
         </div>
 
         <div class="ticket-footer">
-          <p>Important: Carry this pass or soft copy along with your college ID card to the venue.</p>
+          <p>Please present this pass along with your student ID at the event venue.</p>
           <small id="ticket-timestamp">Issued on: -</small>
         </div>
       </div>
 
       <!-- Ticket Actions (Hidden during print) -->
-      <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.75rem; flex-wrap: wrap;" class="no-print">
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Download Ticket</button>
+      <div style="display: flex; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;" class="no-print">
+        <button class="btn btn-primary" onclick="window.print()">Print / Download Ticket</button>
         <button class="btn btn-danger" id="ticket-cancel-btn" onclick="handleCancelFromTicket()">Cancel Registration</button>
         <a href="index.html" class="btn btn-secondary">Browse More Events</a>
       </div>
@@ -145,7 +145,7 @@
 
   <div id="toast-container"></div>
 
-  <!-- Footer with Team Names -->
+  <!-- Shared Footer -->
   <footer id="app-footer" class="site-footer"></footer>
 
   <!-- Scripts -->
@@ -223,7 +223,7 @@
       var closedAlert = document.getElementById("registration-closed-alert");
 
       if (seats.isFull || seats.left <= 0) {
-        statusBadge.textContent = "Sold Out (Full)";
+        statusBadge.textContent = "Sold Out";
         statusBadge.className = "event-badge badge-full";
         formEl.style.display = "none";
         closedAlert.style.display = "block";
@@ -287,7 +287,7 @@
     // Cancel ticket right from slip view
     function handleCancelFromTicket() {
       if (!currentTicket) return;
-      if (!confirm("Are you sure you want to cancel this registration? Your seat will be given to another student.")) return;
+      if (!confirm("Are you sure you want to cancel this registration? Your seat will be freed up for other students.")) return;
 
       var res = cancelRegistration(currentTicket.ticketId);
       if (res.success) {

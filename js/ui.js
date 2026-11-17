@@ -16,20 +16,18 @@ function showToast(message, type) {
 
   var toast = document.createElement("div");
   toast.className = "toast toast-" + toastType;
-  var icon = toastType === "success" ? "✓" : (toastType === "danger" ? "✕" : "ℹ");
-  toast.innerHTML = "<strong>" + icon + "</strong><span>" + message + "</span>";
+  toast.innerHTML = "<span>" + message + "</span>";
 
   container.appendChild(toast);
 
   // Auto remove after 3.5 seconds
   setTimeout(function() {
     toast.style.opacity = "0";
-    toast.style.transform = "translateX(100%)";
     setTimeout(function() {
       if (toast.parentNode) {
         toast.parentNode.removeChild(toast);
       }
-    }, 300);
+    }, 250);
   }, 3500);
 }
 
@@ -44,25 +42,25 @@ function renderNavbar(activePage) {
   if (user) {
     if (user.role === "admin") {
       userSectionHtml = 
-        '<span class="nav-user-badge">🛡️ Admin</span>' +
+        '<span class="nav-user-badge">Admin</span>' +
         '<a href="admin.html" class="' + (activePage === "admin" ? "active" : "") + '">Dashboard</a>' +
         '<button class="btn btn-secondary btn-sm" onclick="handleLogout()">Logout</button>';
     } else {
       userSectionHtml = 
-        '<span class="nav-user-badge">🎓 ' + (user.name || "Student") + ' (' + user.regNo + ')</span>' +
+        '<span class="nav-user-badge">' + (user.name || "Student") + ' (' + user.regNo + ')</span>' +
         '<a href="index.html?view=my-registrations" class="' + (activePage === "my-registrations" ? "active" : "") + '">My Registrations</a>' +
         '<button class="btn btn-secondary btn-sm" onclick="handleLogout()">Logout</button>';
     }
   } else {
     userSectionHtml = 
       '<button class="btn btn-secondary btn-sm" onclick="openStudentLoginModal()">Student Login</button>' +
-      '<button class="btn btn-primary btn-sm" onclick="openAdminLoginModal()">Admin Portal</button>';
+      '<button class="btn btn-primary btn-sm" onclick="openAdminLoginModal()">Organizer Login</button>';
   }
 
   navEl.innerHTML = 
     '<div class="container nav-container">' +
       '<a href="index.html" class="logo">' +
-        '<span class="logo-badge">🏛️</span>' +
+        '<span class="logo-badge">CE</span>' +
         '<span>CampusEvents</span>' +
       '</a>' +
       '<ul class="nav-links">' +
@@ -87,11 +85,11 @@ function renderFooter() {
       '<div class="footer-content">' +
         '<div class="footer-brand">' +
           '<a href="index.html" class="logo">' +
-            '<span class="logo-badge">🏛️</span>' +
+            '<span class="logo-badge">CE</span>' +
             '<span>CampusEvents Portal</span>' +
           '</a>' +
           '<p class="footer-desc">' +
-            'An end-to-end college event management and registration system. Built strictly with standard HTML5, CSS3, and Vanilla JavaScript for zero backend overhead.' +
+            'Official event management and registration portal for campus activities, academic workshops, technical hackathons, and sports events.' +
           '</p>' +
         '</div>' +
 
@@ -101,13 +99,13 @@ function renderFooter() {
             '<li><a href="index.html">Browse Events</a></li>' +
             '<li><a href="index.html?view=my-registrations">My Registrations</a></li>' +
             '<li><a href="admin.html">Organizer Dashboard</a></li>' +
-            '<li><a href="https://github.com" target="_blank" rel="noopener">GitHub Repository</a></li>' +
+            '<li><a href="https://github.com/pkneshwanorg-png/campus-event-portal" target="_blank" rel="noopener">GitHub Repository</a></li>' +
           '</ul>' +
         '</div>' +
       '</div>' +
 
       '<div class="footer-bottom">' +
-        '<div>© 2026 Campus Event Management Portal • All rights reserved.</div>' +
+        '<div>Campus Event Management Portal • CSE326 Web Development</div>' +
         '<div>Pure Vanilla HTML5 / CSS3 / JavaScript</div>' +
       '</div>' +
     '</div>';
@@ -115,14 +113,14 @@ function renderFooter() {
 
 // Helper to render reusable empty-state HTML
 function renderEmptyState(options) {
-  var icon = options.icon || "📅";
+  var icon = options.icon || "";
   var title = options.title || "No events found";
   var desc = options.desc || "There are no events to display matching your criteria.";
   var actionBtn = options.actionBtn || "";
 
   return (
     '<div class="empty-state">' +
-      '<span class="empty-state-icon">' + icon + '</span>' +
+      (icon ? '<span class="empty-state-icon">' + icon + '</span>' : '') +
       '<h3 class="empty-state-title">' + title + '</h3>' +
       '<p class="empty-state-desc">' + desc + '</p>' +
       (actionBtn ? '<div class="empty-state-action">' + actionBtn + '</div>' : '') +
@@ -174,12 +172,12 @@ function renderEventCard(event) {
 
   var categoryBadgeClass = "badge-" + (event.category ? event.category.toLowerCase() : "tech");
   var statusBadge = seats.isFull 
-    ? '<span class="event-badge badge-full">⛔ Sold Out</span>' 
-    : '<span class="event-badge badge-open">✓ ' + seats.left + ' Seats Left</span>';
+    ? '<span class="event-badge badge-full">Sold Out</span>' 
+    : '<span class="event-badge badge-open">' + seats.left + ' Seats Left</span>';
 
   var buttonHtml = seats.isFull
     ? '<button class="btn btn-secondary btn-sm" disabled>Event Full</button>'
-    : '<a href="event.html?id=' + encodeURIComponent(event.id) + '" class="btn btn-primary btn-sm">View & Register →</a>';
+    : '<a href="event.html?id=' + encodeURIComponent(event.id) + '" class="btn btn-primary btn-sm">View & Register</a>';
 
   var countdownText = calculateCountdown(event.date, event.time);
 
@@ -194,12 +192,12 @@ function renderEventCard(event) {
       '</div>' +
       '<div class="event-card-body">' +
         '<div class="event-meta">' +
-          '<div class="event-meta-item"><span class="event-meta-icon">📅</span> <div><strong>' + event.date + '</strong> at ' + event.time + '</div></div>' +
-          '<div class="event-meta-item"><span class="event-meta-icon">📍</span> <div>' + event.venue + '</div></div>' +
-          '<div class="event-meta-item"><span class="event-meta-icon">🎓</span> <div>' + event.eligibility + '</div></div>' +
+          '<div class="event-meta-item"><span class="event-meta-icon">Date:</span> <div><strong>' + event.date + '</strong> at ' + event.time + '</div></div>' +
+          '<div class="event-meta-item"><span class="event-meta-icon">Venue:</span> <div>' + event.venue + '</div></div>' +
+          '<div class="event-meta-item"><span class="event-meta-icon">For:</span> <div>' + event.eligibility + '</div></div>' +
         '</div>' +
         '<p class="event-desc">' + event.description + '</p>' +
-        '<div class="countdown-box">⏳ ' + countdownText + '</div>' +
+        '<div class="countdown-box">' + countdownText + '</div>' +
         '<div class="seats-progress">' +
           '<div class="seats-label">' +
             '<span>Live Capacity</span>' +
@@ -211,7 +209,7 @@ function renderEventCard(event) {
         '</div>' +
       '</div>' +
       '<div class="event-card-footer">' +
-        '<small class="text-muted">' + (seats.isFull ? "No more seats" : "Fast filling") + '</small>' +
+        '<small class="text-muted">' + (seats.isFull ? "Registration closed" : "Seats available") + '</small>' +
         buttonHtml +
       '</div>' +
     '</div>'

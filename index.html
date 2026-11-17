@@ -15,10 +15,9 @@
   <!-- Hero Welcome Banner -->
   <section class="hero-section">
     <div class="container">
-      <div class="hero-pill">🏛️ Official Campus Event Hub</div>
-      <h1 class="hero-title">Discover, Attend & Excel in Campus Events</h1>
+      <h1 class="hero-title">Upcoming Campus Events</h1>
       <p class="hero-subtitle">
-        Your one-stop college portal to explore technical hackathons, cultural fests, hands-on workshops, and sports tournaments.
+        Browse and register for campus events, workshops, technical competitions, and cultural activities.
       </p>
     </div>
   </section>
@@ -31,11 +30,10 @@
       <!-- Search and Filter Bar -->
       <section class="filter-bar">
         <div class="search-input-wrapper">
-          <span class="search-icon">🔍</span>
           <input 
             type="text" 
             id="search-input" 
-            class="filter-input with-icon" 
+            class="filter-input" 
             placeholder="Search events by title, description, or venue..." 
             oninput="handleFilterChange()"
           >
@@ -71,7 +69,7 @@
           <h2>My Event Registrations</h2>
           <p class="text-muted" id="student-info-heading">Track your booked tickets and active campus passes.</p>
         </div>
-        <a href="index.html" class="btn btn-secondary btn-sm">← Back to All Events</a>
+        <a href="index.html" class="btn btn-secondary btn-sm">Back to All Events</a>
       </div>
 
       <div id="my-registrations-container">
@@ -100,13 +98,13 @@
   <div id="student-login-modal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Student Login / Identification</h3>
+        <h3 class="modal-title">Student Login</h3>
         <button class="modal-close" onclick="closeStudentLoginModal()">&times;</button>
       </div>
       <form id="student-login-form" onsubmit="handleStudentLogin(event)">
         <div class="modal-body">
           <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">
-            Enter your college Registration Number to view your registered events or quickly book passes.
+            Enter your college Registration Number to view your registered events or book passes.
           </p>
           <div class="form-group">
             <label class="form-label" for="login-reg-no">Registration Number (e.g. 123001)</label>
@@ -119,7 +117,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="closeStudentLoginModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Login / Continue</button>
+          <button type="submit" class="btn btn-primary">Login</button>
         </div>
       </form>
     </div>
@@ -129,12 +127,12 @@
   <div id="admin-login-modal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Organizer / Admin Login</h3>
+        <h3 class="modal-title">Organizer Login</h3>
         <button class="modal-close" onclick="closeAdminLoginModal()">&times;</button>
       </div>
       <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
         <div class="modal-body">
-          <div style="background-color: #f1f5f9; padding: 0.85rem 1rem; border-radius: var(--radius-sm); font-size: 0.86rem; margin-bottom: 1.25rem; border: 1px solid var(--border-color);">
+          <div style="background-color: var(--bg); padding: 0.85rem 1rem; border-radius: var(--radius); font-size: 0.86rem; margin-bottom: 1.25rem; border: 1px solid var(--border);">
             <strong>Demo Credentials:</strong><br>
             Username: <code>admin</code><br>
             Password: <code>admin123</code>
@@ -150,7 +148,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="closeAdminLoginModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Sign In as Admin</button>
+          <button type="submit" class="btn btn-primary">Sign In</button>
         </div>
       </form>
     </div>
@@ -159,7 +157,7 @@
   <!-- Toast Container -->
   <div id="toast-container"></div>
 
-  <!-- Footer with Team Names -->
+  <!-- Shared Footer -->
   <footer id="app-footer" class="site-footer"></footer>
 
   <!-- Scripts -->
@@ -183,7 +181,7 @@
         renderEventsList();
       }
 
-      // Render shared footer with team members
+      // Render shared footer
       renderFooter();
     });
 
@@ -197,10 +195,10 @@
       // Absolute empty state if no events exist in storage
       if (allEvents.length === 0) {
         container.innerHTML = renderEmptyState({
-          icon: "📅",
+          icon: "",
           title: "No events yet",
-          desc: "There are currently no events published on campus. Check back soon or log in as Organizer to add new ones.",
-          actionBtn: '<button class="btn btn-primary btn-sm" onclick="openAdminLoginModal()">Organizer Portal</button>'
+          desc: "There are currently no events published. Log in as an Organizer to create new events.",
+          actionBtn: '<button class="btn btn-primary btn-sm" onclick="openAdminLoginModal()">Organizer Login</button>'
         });
         return;
       }
@@ -235,9 +233,9 @@
 
       if (filtered.length === 0) {
         container.innerHTML = renderEmptyState({
-          icon: "🔍",
+          icon: "",
           title: "No events match your criteria",
-          desc: "We couldn't find any campus events matching your active search filters. Try clearing your search keyword or switching categories.",
+          desc: "No events match the selected search keywords or filters. Try adjusting your search.",
           actionBtn: '<button class="btn btn-secondary btn-sm" onclick="resetFilters()">Reset Filters</button>'
         });
         return;
@@ -281,10 +279,10 @@
 
       if (registrations.length === 0) {
         container.innerHTML = renderEmptyState({
-          icon: "🎟️",
+          icon: "",
           title: "No event registrations yet",
-          desc: "You haven't reserved tickets for any campus events. Explore upcoming workshops, hackathons, and sports events to get your pass!",
-          actionBtn: '<a href="index.html" class="btn btn-primary btn-sm">Explore Upcoming Events →</a>'
+          desc: "You have not registered for any events yet. Browse available campus events to register.",
+          actionBtn: '<a href="index.html" class="btn btn-primary btn-sm">Browse Events</a>'
         });
         return;
       }
