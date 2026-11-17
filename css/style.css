@@ -1,6 +1,6 @@
 /* ==========================================================================
-   Campus Event Management & Registration Portal
-   Institutional Theme - Clean, Flat, Human-Designed College Portal
+   Barbershop Appointment & Management Portal
+   Clean, Flat, Professional Human-Designed Portal
    ========================================================================== */
 
 /* --- CSS Variables & Design Tokens --- */
@@ -427,6 +427,37 @@ a:hover {
   background-color: #E0F2F1;
   color: #00695C;
   border-color: #B2DFDB;
+}
+
+.event-badge.badge-haircut {
+  background-color: #EBF1F8;
+  color: var(--primary);
+  border-color: #D3DFEE;
+}
+
+.event-badge.badge-beard-trim,
+.event-badge.badge-shave {
+  background-color: #FFF3E0;
+  color: #B45309;
+  border-color: #FDE68A;
+}
+
+.event-badge.badge-hair-color {
+  background-color: #FCE4EC;
+  color: #880E4F;
+  border-color: #F8BBD0;
+}
+
+.event-badge.badge-facial {
+  background-color: #E0F2F1;
+  color: #00695C;
+  border-color: #B2DFDB;
+}
+
+.event-badge.badge-combo {
+  background-color: #F3E8FF;
+  color: #6B21A8;
+  border-color: #E9D5FF;
 }
 
 .event-title {

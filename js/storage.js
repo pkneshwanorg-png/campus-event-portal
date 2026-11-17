@@ -1,76 +1,80 @@
 /**
  * storage.js
  * Helpers to read, write, and seed data in browser localStorage.
- * Everything is kept simple and beginner-friendly for college viva.
+ * 
+ * BARBERSHOP CONTEXT MAPPING:
+ * - 'EVENTS' represents Service Slots (haircut/shave/styling time slots with barbers).
+ * - 'REGISTRATIONS' represents Customer Bookings.
+ * - 'CURRENT_USER' represents either Customer (phone + name) or Shop Owner (admin).
  */
 
-// Storage keys used across the entire application
+// Storage keys for barbershop appointments and bookings
 var STORAGE_KEYS = {
-  EVENTS: "campus_events",
-  REGISTRATIONS: "campus_registrations",
-  CURRENT_USER: "campus_current_user"
+  EVENTS: "barbershop_slots",
+  REGISTRATIONS: "barbershop_bookings",
+  CURRENT_USER: "barbershop_current_user"
 };
 
-// 5 initial sample events to seed if localStorage is empty
+// 5 initial barbershop service slots to seed if localStorage is empty
 var SAMPLE_EVENTS = [
   {
     id: "evt-1",
-    title: "Hackathon 2026: Code for Future",
+    title: "Classic Haircut & Styling with Rahul",
     date: "2026-11-20",
-    time: "09:00 AM",
-    venue: "Main Auditorium, Block 34",
-    description: "An intensive 24-hour coding sprint building AI and Web apps to solve real campus problems. Food and certificates provided.",
-    eligibility: "Open to B.Tech CSE, IT & MCA students (All Years)",
-    category: "Technical",
-    capacity: 50
+    time: "10:00 AM",
+    venue: "Chair 1 - Master Barber Rahul",
+    description: "Precision tailored haircut, neck taper, hot towel finish and styling with premium pomade. Price: Rs. 250.",
+    eligibility: "Please arrive 5 minutes before your slot. Walk-ins not accepted.",
+    category: "Haircut",
+    capacity: 2
   },
   {
     id: "evt-2",
-    title: "AI & Machine Learning Hands-on Workshop",
-    date: "2026-11-25",
-    time: "02:00 PM",
-    venue: "Lab 402, Computer Block",
-    description: "Step-by-step masterclass covering Python data libraries, neural networks, and deploying models with Google Colab.",
-    eligibility: "Open to all engineering students with basic Python knowledge",
-    category: "Workshop",
-    capacity: 35
+    title: "Beard Sculpt & Razor Shave with Amit",
+    date: "2026-11-20",
+    time: "11:30 AM",
+    venue: "Chair 2 - Stylist Amit",
+    description: "Beard shaping, hot lather straight-razor edge line-up, warm towel therapy, and organic beard oil treatment. Price: Rs. 180.",
+    eligibility: "Patch test recommended for sensitive skin.",
+    category: "Beard Trim",
+    capacity: 1
   },
   {
     id: "evt-3",
-    title: "Battle of the Bands & Acoustic Night",
-    date: "2026-12-05",
-    time: "05:30 PM",
-    venue: "Open Air Theatre (OAT)",
-    description: "Annual cultural inter-college musical showdown featuring college bands, solo vocals, and beatboxers.",
-    eligibility: "Open to all university students & faculty",
-    category: "Cultural",
-    capacity: 80
+    title: "Executive Grooming Combo with Vikram",
+    date: "2026-11-21",
+    time: "02:00 PM",
+    venue: "VIP Suite - Vikram",
+    description: "Complete signature package: haircut, beard trim, charcoal deep cleanse face wash, and head massage. Price: Rs. 550.",
+    eligibility: "Full appointment duration is approximately 45 minutes.",
+    category: "Combo",
+    capacity: 2
   },
   {
     id: "evt-4",
-    title: "Inter-Department Cricket Tournament",
-    date: "2026-12-10",
-    time: "08:00 AM",
-    venue: "University Sports Ground",
-    description: "T20 Knockout championship. Trophy, medals, and exciting cash prizes for winners and runners-up.",
-    eligibility: "Open to department registered teams",
-    category: "Sports",
-    capacity: 40
+    title: "De-Tan Facial & Scalp Massage with Rahul",
+    date: "2026-11-22",
+    time: "04:00 PM",
+    venue: "Chair 1 - Master Barber Rahul",
+    description: "Herbal de-tan treatment with steam, gentle exfoliating scrub, blackhead extraction, and acupressure scalp massage. Price: Rs. 400.",
+    eligibility: "Avoid direct prolonged sun exposure immediately following facial.",
+    category: "Facial",
+    capacity: 1
   },
   {
     id: "evt-5",
-    title: "Web Development Masterclass (HTML/CSS/JS)",
-    date: "2026-12-15",
-    time: "10:30 AM",
-    venue: "Seminar Hall 2, Innovation Centre",
-    description: "Learn modern responsive frontend design, vanilla JavaScript DOM manipulation, and GitHub Pages deployment.",
-    eligibility: "All undergraduate students welcome",
-    category: "Workshop",
-    capacity: 30
+    title: "Global Hair Color & Highlights with Suresh",
+    date: "2026-11-25",
+    time: "03:00 PM",
+    venue: "Color Station - Suresh",
+    description: "Ammonia-free organic hair color application or subtle highlights. Includes nourishing hair wash and blow dry. Price: Rs. 600.",
+    eligibility: "Bring a reference photo if requesting custom shades or highlights.",
+    category: "Hair Color",
+    capacity: 3
   }
 ];
 
-// Helper to seed sample events on first application launch
+// Helper to seed sample slots on first application launch
 function initStorage() {
   var storedEvents = localStorage.getItem(STORAGE_KEYS.EVENTS);
   if (!storedEvents) {
@@ -78,28 +82,28 @@ function initStorage() {
   }
   var storedRegs = localStorage.getItem(STORAGE_KEYS.REGISTRATIONS);
   if (!storedRegs) {
-    // Add 2-3 sample registrations so the seat counts and admin charts have data right away
+    // Add sample bookings so slot counts and owner charts have live demo data
     var initialRegistrations = [
       {
-        ticketId: "TCK-1001",
+        ticketId: "BK-1001",
         eventId: "evt-1",
-        regNo: "123001",
+        regNo: "9876543210",
         name: "Aman Sharma",
         email: "aman@example.com",
         registeredAt: "2026-11-10T10:00:00.000Z"
       },
       {
-        ticketId: "TCK-1002",
+        ticketId: "BK-1002",
         eventId: "evt-1",
-        regNo: "123002",
+        regNo: "9876543211",
         name: "Priya Patel",
         email: "priya@example.com",
         registeredAt: "2026-11-10T11:15:00.000Z"
       },
       {
-        ticketId: "TCK-1003",
+        ticketId: "BK-1003",
         eventId: "evt-2",
-        regNo: "123001",
+        regNo: "9876543210",
         name: "Aman Sharma",
         email: "aman@example.com",
         registeredAt: "2026-11-11T09:30:00.000Z"
@@ -109,26 +113,26 @@ function initStorage() {
   }
 }
 
-// Read events array from localStorage
+// Read service slots array from localStorage
 function getStoredEvents() {
   initStorage();
   var data = localStorage.getItem(STORAGE_KEYS.EVENTS);
   return data ? JSON.parse(data) : [];
 }
 
-// Save events array to localStorage
+// Save service slots array to localStorage
 function saveStoredEvents(eventsArray) {
   localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(eventsArray));
 }
 
-// Read registrations array from localStorage
+// Read bookings array from localStorage
 function getStoredRegistrations() {
   initStorage();
   var data = localStorage.getItem(STORAGE_KEYS.REGISTRATIONS);
   return data ? JSON.parse(data) : [];
 }
 
-// Save registrations array to localStorage
+// Save bookings array to localStorage
 function saveStoredRegistrations(registrationsArray) {
   localStorage.setItem(STORAGE_KEYS.REGISTRATIONS, JSON.stringify(registrationsArray));
 }
@@ -139,7 +143,7 @@ function getCurrentUser() {
   return data ? JSON.parse(data) : null;
 }
 
-// Set or log in the current user (e.g. { role: 'student', regNo: '12345', name: 'Rohan' } or { role: 'admin' })
+// Set or log in the current user (e.g. { role: 'student', regNo: '9876543210', name: 'Rohan' } or { role: 'admin' })
 function setCurrentUser(userObject) {
   localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userObject));
 }
@@ -148,4 +152,3 @@ function setCurrentUser(userObject) {
 function clearCurrentUser() {
   localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
 }
-

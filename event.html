@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Details & Registration - Campus Portal</title>
+  <title>Book Service Appointment - Barbershop Portal</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -16,35 +16,35 @@
 
     <!-- Back Navigation Bar -->
     <div style="margin-bottom: 1.5rem;" class="no-print">
-      <a href="index.html" class="btn btn-secondary btn-sm">Back to All Events</a>
+      <a href="index.html" class="btn btn-secondary btn-sm">Back to Service Slots</a>
     </div>
 
-    <!-- Event Detail & Registration Layout Grid -->
+    <!-- Service Slot Detail & Booking Layout Grid -->
     <div id="event-main-content" style="display: grid; grid-template-columns: 1fr 390px; gap: 1.75rem; align-items: start;">
       
-      <!-- Left Column: Event Information -->
+      <!-- Left Column: Service Slot Information -->
       <div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-          <span id="detail-category" class="event-badge badge-tech">Technical</span>
-          <span id="detail-status-badge" class="event-badge badge-open">Checking seats...</span>
+          <span id="detail-category" class="event-badge badge-haircut">Haircut</span>
+          <span id="detail-status-badge" class="event-badge badge-open">Checking availability...</span>
         </div>
 
-        <h1 id="detail-title" style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.25rem;">Loading Event...</h1>
+        <h1 id="detail-title" style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1.25rem;">Loading Service Slot...</h1>
 
         <div class="event-meta" style="font-size: 0.92rem; margin-bottom: 1.75rem; background: var(--bg); padding: 1.15rem; border-radius: var(--radius); border: 1px solid var(--border); gap: 0.5rem;">
           <div class="event-meta-item"><span class="event-meta-icon">Date:</span> <div><strong>Date & Time:</strong> <span id="detail-datetime"></span></div></div>
-          <div class="event-meta-item"><span class="event-meta-icon">Venue:</span> <div><strong>Venue:</strong> <span id="detail-venue"></span></div></div>
-          <div class="event-meta-item"><span class="event-meta-icon">For:</span> <div><strong>Eligibility:</strong> <span id="detail-eligibility"></span></div></div>
+          <div class="event-meta-item"><span class="event-meta-icon">Barber:</span> <div><strong>Chair / Barber:</strong> <span id="detail-venue"></span></div></div>
+          <div class="event-meta-item"><span class="event-meta-icon">Notes:</span> <div><strong>Requirements & Notes:</strong> <span id="detail-eligibility"></span></div></div>
         </div>
 
-        <h3 style="margin-bottom: 0.65rem; font-size: 1.15rem; font-weight: 600;">About this Event</h3>
+        <h3 style="margin-bottom: 0.65rem; font-size: 1.15rem; font-weight: 600;">About this Service Slot</h3>
         <p id="detail-description" style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; white-space: pre-line;"></p>
 
-        <!-- Seat Bar -->
+        <!-- Slot Capacity Bar -->
         <div class="seats-progress" style="margin-top: 1.5rem; background-color: var(--bg); padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border);">
           <div class="seats-label">
-            <span>Seat Capacity Utilization</span>
-            <span id="detail-seat-text">0 / 0 booked</span>
+            <span>Slot Capacity Utilization</span>
+            <span id="detail-seat-text">0 / 0 booked (0 left)</span>
           </div>
           <div class="progress-bar-bg" style="height: 8px;">
             <div id="detail-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
@@ -52,61 +52,61 @@
         </div>
       </div>
 
-      <!-- Right Column: Registration Card -->
+      <!-- Right Column: Booking Card -->
       <div id="registration-card-panel" style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; box-shadow: var(--shadow); position: sticky; top: 80px;">
-        <h3 style="margin-bottom: 0.35rem; font-size: 1.2rem; font-weight: 600;">Register for Event</h3>
+        <h3 style="margin-bottom: 0.35rem; font-size: 1.2rem; font-weight: 600;">Book Appointment</h3>
         <p class="text-muted" style="font-size: 0.88rem; margin-bottom: 1.25rem; line-height: 1.5;">
-          Enter your details below to reserve your seat and generate your official admission pass.
+          Enter your phone and name below to reserve your slot and generate your appointment pass.
         </p>
 
         <form id="registration-form" onsubmit="handleRegistrationSubmit(event)">
           <div class="form-group">
-            <label class="form-label" for="reg-no">Registration Number *</label>
-            <input type="text" id="reg-no" class="form-control" placeholder="e.g. 123045" required>
+            <label class="form-label" for="reg-no">Phone Number (10 digits) *</label>
+            <input type="tel" id="reg-no" class="form-control" placeholder="e.g. 9876543210" pattern="[0-9]{10}" maxlength="10" required>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="reg-name">Full Name *</label>
+            <label class="form-label" for="reg-name">Customer Full Name *</label>
             <input type="text" id="reg-name" class="form-control" placeholder="e.g. Rahul Verma" required>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="reg-email">College / Personal Email *</label>
+            <label class="form-label" for="reg-email">Email Address *</label>
             <input type="email" id="reg-email" class="form-control" placeholder="e.g. rahul@example.com" required>
           </div>
 
-          <button type="submit" id="submit-reg-btn" class="btn btn-primary btn-block">Confirm Registration</button>
+          <button type="submit" id="submit-reg-btn" class="btn btn-primary btn-block">Confirm Appointment Booking</button>
         </form>
 
         <div id="registration-closed-alert" style="display: none; padding: 1.1rem; background-color: var(--danger-bg); color: var(--danger); border-radius: var(--radius); text-align: center; font-size: 0.92rem; font-weight: 600; border: 1px solid #F8D7DA;">
-          Registration Closed — All seats for this event are fully booked.
+          Booking Closed — This service slot is fully booked.
         </div>
       </div>
 
     </div>
 
-    <!-- Confirmation Slip View (Shown after registration or when ticketId is in query) -->
+    <!-- Booking Confirmation Pass View -->
     <div id="confirmation-view" style="display: none; padding: 1rem 0;">
       <div style="text-align: center; margin-bottom: 1.5rem;" class="no-print">
-        <h2 style="color: var(--success); font-size: 1.6rem; font-weight: 600; margin-bottom: 0.35rem;">Registration Confirmed</h2>
-        <p class="text-muted">Here is your official admission pass. Please print or save this ticket.</p>
+        <h2 style="color: var(--success); font-size: 1.6rem; font-weight: 600; margin-bottom: 0.35rem;">Appointment Confirmed</h2>
+        <p class="text-muted">Here is your official appointment pass. Please save or print this confirmation.</p>
       </div>
 
       <!-- Printable Ticket Area -->
       <div class="ticket-wrapper" id="printable-ticket">
         <div class="ticket-header">
-          <div class="ticket-brand">Campus Event Admission Pass</div>
-          <h2 id="ticket-event-title" style="margin-top: 0.35rem; font-size: 1.3rem; font-weight: 600;">Event Title</h2>
-          <div class="ticket-code" id="ticket-id-display">TCK-000000</div>
+          <div class="ticket-brand">Barbershop Appointment Pass</div>
+          <h2 id="ticket-event-title" style="margin-top: 0.35rem; font-size: 1.3rem; font-weight: 600;">Service Slot Title</h2>
+          <div class="ticket-code" id="ticket-id-display">BK-000000</div>
         </div>
 
         <div class="ticket-grid">
           <div>
-            <div class="ticket-field-label">Student Name</div>
+            <div class="ticket-field-label">Customer Name</div>
             <div class="ticket-field-val" id="ticket-student-name">-</div>
           </div>
           <div>
-            <div class="ticket-field-label">Registration No.</div>
+            <div class="ticket-field-label">Phone Number</div>
             <div class="ticket-field-val" id="ticket-student-reg">-</div>
           </div>
           <div>
@@ -114,11 +114,11 @@
             <div class="ticket-field-val" id="ticket-datetime">-</div>
           </div>
           <div>
-            <div class="ticket-field-label">Venue</div>
+            <div class="ticket-field-label">Chair / Barber</div>
             <div class="ticket-field-val" id="ticket-venue">-</div>
           </div>
           <div>
-            <div class="ticket-field-label">Category</div>
+            <div class="ticket-field-label">Service Type</div>
             <div class="ticket-field-val" id="ticket-category">-</div>
           </div>
           <div>
@@ -128,16 +128,16 @@
         </div>
 
         <div class="ticket-footer">
-          <p>Please present this pass along with your student ID at the event venue.</p>
+          <p>Please arrive 5 minutes before your scheduled appointment time.</p>
           <small id="ticket-timestamp">Issued on: -</small>
         </div>
       </div>
 
       <!-- Ticket Actions (Hidden during print) -->
       <div style="display: flex; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;" class="no-print">
-        <button class="btn btn-primary" onclick="window.print()">Print / Download Ticket</button>
-        <button class="btn btn-danger" id="ticket-cancel-btn" onclick="handleCancelFromTicket()">Cancel Registration</button>
-        <a href="index.html" class="btn btn-secondary">Browse More Events</a>
+        <button class="btn btn-primary" onclick="window.print()">Print / Download Confirmation</button>
+        <button class="btn btn-danger" id="ticket-cancel-btn" onclick="handleCancelFromTicket()">Cancel Booking</button>
+        <a href="index.html" class="btn btn-secondary">Browse More Slots</a>
       </div>
     </div>
 
@@ -167,19 +167,19 @@
       var ticketId = urlParams.get("ticketId");
 
       if (!eventId) {
-        alert("No event ID provided in URL!");
+        alert("No service slot ID provided in URL!");
         window.location.href = "index.html";
         return;
       }
 
       currentEvent = getEventById(eventId);
       if (!currentEvent) {
-        alert("Event not found!");
+        alert("Service slot not found!");
         window.location.href = "index.html";
         return;
       }
 
-      // If viewing an already generated ticket
+      // If viewing an already generated booking pass
       if (ticketId) {
         var reg = getRegistrationByTicketId(ticketId);
         if (reg) {
@@ -188,10 +188,10 @@
         }
       }
 
-      // Populate Event Details
+      // Populate Service Slot Details
       renderEventDetails(currentEvent);
 
-      // Pre-fill student info if logged in
+      // Pre-fill customer info if logged in
       var loggedUser = getCurrentUser();
       if (loggedUser && loggedUser.role === "student") {
         document.getElementById("reg-no").value = loggedUser.regNo || "";
@@ -199,10 +199,14 @@
       }
     });
 
-    // Populate Left & Right Event details
+    // Populate Left & Right Service details
     function renderEventDetails(ev) {
       document.getElementById("detail-title").textContent = ev.title;
-      document.getElementById("detail-category").textContent = ev.category || "General";
+      document.getElementById("detail-category").textContent = ev.category || "Haircut";
+      
+      var catKey = ev.category ? ev.category.toLowerCase().replace(/[^a-z0-9]/g, "-") : "haircut";
+      document.getElementById("detail-category").className = "event-badge badge-" + catKey;
+
       document.getElementById("detail-datetime").textContent = ev.date + " at " + ev.time;
       document.getElementById("detail-venue").textContent = ev.venue;
       document.getElementById("detail-eligibility").textContent = ev.eligibility;
@@ -211,7 +215,7 @@
       var seats = getSeatsInfo(ev.id);
       var fillPercent = Math.round((seats.registered / seats.capacity) * 100) || 0;
 
-      document.getElementById("detail-seat-text").textContent = seats.registered + " / " + seats.capacity + " seats filled (" + seats.left + " left)";
+      document.getElementById("detail-seat-text").textContent = seats.registered + " / " + seats.capacity + " slots booked (" + seats.left + " left)";
       
       var fillBar = document.getElementById("detail-progress-fill");
       fillBar.style.width = fillPercent + "%";
@@ -223,42 +227,48 @@
       var closedAlert = document.getElementById("registration-closed-alert");
 
       if (seats.isFull || seats.left <= 0) {
-        statusBadge.textContent = "Sold Out";
+        statusBadge.textContent = "Fully Booked";
         statusBadge.className = "event-badge badge-full";
         formEl.style.display = "none";
         closedAlert.style.display = "block";
       } else {
-        statusBadge.textContent = seats.left + " Seats Left";
+        statusBadge.textContent = seats.left + (seats.left === 1 ? " Slot Left" : " Slots Left");
         statusBadge.className = "event-badge badge-open";
         formEl.style.display = "block";
         closedAlert.style.display = "none";
       }
     }
 
-    // Submit Registration
+    // Submit Appointment Booking
     function handleRegistrationSubmit(e) {
       e.preventDefault();
-      var regNo = document.getElementById("reg-no").value.trim();
+      var rawPhone = document.getElementById("reg-no").value.trim();
+      var cleanPhone = rawPhone.replace(/\D/g, "");
       var name = document.getElementById("reg-name").value.trim();
       var email = document.getElementById("reg-email").value.trim();
 
-      if (!regNo || !name || !email) {
+      if (cleanPhone.length !== 10) {
+        showToast("Please provide a valid 10-digit mobile number", "warning");
+        return;
+      }
+
+      if (!name || !email) {
         showToast("Please fill all required fields", "warning");
         return;
       }
 
       var res = registerStudent({
         eventId: currentEvent.id,
-        regNo: regNo,
+        regNo: cleanPhone,
         name: name,
         email: email
       });
 
       if (res.success) {
         showToast(res.message, "success");
-        // Also save student session if not logged in
+        // Also save customer session if not logged in
         if (!getCurrentUser()) {
-          setCurrentUser({ role: "student", regNo: regNo, name: name });
+          setCurrentUser({ role: "student", regNo: cleanPhone, name: name });
           renderNavbar();
         }
         showConfirmationSlip(res.registration, currentEvent);
@@ -284,10 +294,10 @@
       document.getElementById("ticket-timestamp").textContent = "Issued on: " + new Date(registration.registeredAt).toLocaleString();
     }
 
-    // Cancel ticket right from slip view
+    // Cancel appointment right from slip view
     function handleCancelFromTicket() {
       if (!currentTicket) return;
-      if (!confirm("Are you sure you want to cancel this registration? Your seat will be freed up for other students.")) return;
+      if (!confirm("Are you sure you want to cancel this appointment booking? Your slot will be freed up for other customers.")) return;
 
       var res = cancelRegistration(currentTicket.ticketId);
       if (res.success) {

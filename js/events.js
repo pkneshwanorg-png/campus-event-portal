@@ -1,14 +1,21 @@
 /**
  * events.js
- * Handles operations on events: create, edit, delete, find, and seat calculation.
+ * Handles operations on service slots: create, edit, delete, find, and available slot calculations.
+ * 
+ * BARBERSHOP CONTEXT MAPPING:
+ * - 'Event' represents a Service Slot (e.g. Haircut or Styling with a specific barber).
+ * - 'Venue' represents the Barber / Chair.
+ * - 'Category' represents the Service Type (Haircut, Beard Trim, Shave, Hair Color, Facial, Combo).
+ * - 'Capacity' represents Available Chairs / Slots per time interval (typically 1-3).
+ * - 'Eligibility' represents Booking Notes / Requirements (e.g. arrival time, reference photo).
  */
 
-// Return all events
+// Return all service slots
 function getAllEvents() {
   return getStoredEvents();
 }
 
-// Find a single event by its unique ID
+// Find a single service slot by its unique ID
 function getEventById(eventId) {
   var events = getAllEvents();
   for (var i = 0; i < events.length; i++) {
@@ -19,7 +26,7 @@ function getEventById(eventId) {
   return null;
 }
 
-// Calculate remaining seats for an event: capacity minus existing registrations
+// Calculate remaining slots: capacity minus existing customer bookings
 function getSeatsInfo(eventId) {
   var event = getEventById(eventId);
   if (!event) return { capacity: 0, registered: 0, left: 0, isFull: true };
@@ -44,7 +51,7 @@ function getSeatsInfo(eventId) {
   };
 }
 
-// Create a new event and save to storage
+// Create a new service slot and save to storage
 function createEvent(eventData) {
   var events = getAllEvents();
   // Generate a simple unique ID using timestamp
@@ -66,19 +73,19 @@ function createEvent(eventData) {
   return newEvent;
 }
 
-// Update an existing event by ID
+// Update an existing service slot by ID
 function updateEvent(eventId, updatedData) {
   var events = getAllEvents();
   for (var i = 0; i < events.length; i++) {
     if (events[i].id === eventId) {
-      events[i].title = updatedData.title.trim();
-      events[i].date = updatedData.date;
-      events[i].time = updatedData.time;
-      events[i].venue = updatedData.venue.trim();
-      events[i].description = updatedData.description.trim();
-      events[i].eligibility = updatedData.eligibility.trim();
-      events[i].category = updatedData.category;
-      events[i].capacity = parseInt(updatedData.capacity, 10) || 0;
+      if (updatedData.title !== undefined) events[i].title = updatedData.title.trim();
+      if (updatedData.date !== undefined) events[i].date = updatedData.date;
+      if (updatedData.time !== undefined) events[i].time = updatedData.time;
+      if (updatedData.venue !== undefined) events[i].venue = updatedData.venue.trim();
+      if (updatedData.description !== undefined) events[i].description = updatedData.description.trim();
+      if (updatedData.eligibility !== undefined) events[i].eligibility = updatedData.eligibility.trim();
+      if (updatedData.category !== undefined) events[i].category = updatedData.category;
+      if (updatedData.capacity !== undefined) events[i].capacity = parseInt(updatedData.capacity, 10) || 0;
       saveStoredEvents(events);
       return events[i];
     }
@@ -86,7 +93,7 @@ function updateEvent(eventId, updatedData) {
   return null;
 }
 
-// Delete an event and also clear its registrations
+// Delete a service slot and also clear its bookings
 function deleteEvent(eventId) {
   var events = getAllEvents();
   var filteredEvents = [];
@@ -97,7 +104,7 @@ function deleteEvent(eventId) {
   }
   saveStoredEvents(filteredEvents);
 
-  // Remove related registrations to keep storage tidy
+  // Remove related bookings to keep storage tidy
   var registrations = getStoredRegistrations();
   var remainingRegs = [];
   for (var j = 0; j < registrations.length; j++) {
@@ -107,4 +114,3 @@ function deleteEvent(eventId) {
   }
   saveStoredRegistrations(remainingRegs);
 }
-

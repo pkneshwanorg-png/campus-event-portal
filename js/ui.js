@@ -1,10 +1,15 @@
 /**
  * ui.js
  * Handles shared UI elements: navbar rendering, footer rendering, toast alerts, modals,
- * countdown timers, empty state cards, and event card generation.
+ * countdown timers, empty state cards, and service slot card generation.
+ * 
+ * BARBERSHOP CONTEXT MAPPING:
+ * - 'Navbar' & 'Footer' display Barbershop branding and customer/owner links.
+ * - 'renderEventCard' generates Service Slot cards (with Barber/Chair, Date/Time, and Slots Left).
+ * - 'renderEmptyState' displays empty messages for missing service slots or client bookings.
  */
 
-// Show in-app toast message (success, danger, warning)
+// Show in-app toast message (success, danger, warning, info)
 function showToast(message, type) {
   var toastType = type || "success";
   var container = document.getElementById("toast-container");
@@ -31,7 +36,7 @@ function showToast(message, type) {
   }, 3500);
 }
 
-// Render dynamic navigation bar based on logged in user role
+// Render dynamic navigation bar based on logged-in role (Customer vs Shop Owner)
 function renderNavbar(activePage) {
   var navEl = document.getElementById("app-navbar");
   if (!navEl) return;
@@ -42,31 +47,31 @@ function renderNavbar(activePage) {
   if (user) {
     if (user.role === "admin") {
       userSectionHtml = 
-        '<span class="nav-user-badge">Admin</span>' +
-        '<a href="admin.html" class="' + (activePage === "admin" ? "active" : "") + '">Dashboard</a>' +
+        '<span class="nav-user-badge">Shop Owner</span>' +
+        '<a href="admin.html" class="' + (activePage === "admin" ? "active" : "") + '">Owner Dashboard</a>' +
         '<button class="btn btn-secondary btn-sm" onclick="handleLogout()">Logout</button>';
     } else {
       userSectionHtml = 
-        '<span class="nav-user-badge">' + (user.name || "Student") + ' (' + user.regNo + ')</span>' +
-        '<a href="index.html?view=my-registrations" class="' + (activePage === "my-registrations" ? "active" : "") + '">My Registrations</a>' +
+        '<span class="nav-user-badge">Customer: ' + (user.name || "Client") + ' (' + user.regNo + ')</span>' +
+        '<a href="index.html?view=my-registrations" class="' + (activePage === "my-registrations" ? "active" : "") + '">My Bookings</a>' +
         '<button class="btn btn-secondary btn-sm" onclick="handleLogout()">Logout</button>';
     }
   } else {
     userSectionHtml = 
-      '<button class="btn btn-secondary btn-sm" onclick="openStudentLoginModal()">Student Login</button>' +
-      '<button class="btn btn-primary btn-sm" onclick="openAdminLoginModal()">Organizer Login</button>';
+      '<button class="btn btn-secondary btn-sm" onclick="openStudentLoginModal()">Customer Login</button>' +
+      '<button class="btn btn-primary btn-sm" onclick="openAdminLoginModal()">Owner Login</button>';
   }
 
   navEl.innerHTML = 
     '<div class="container nav-container">' +
       '<a href="index.html" class="logo">' +
-        '<span class="logo-badge">CE</span>' +
-        '<span>CampusEvents</span>' +
+        '<span class="logo-badge">BS</span>' +
+        '<span>Barbershop Portal</span>' +
       '</a>' +
       '<ul class="nav-links">' +
-        '<li><a href="index.html" class="' + (activePage === "events" ? "active" : "") + '">Browse Events</a></li>' +
-        (user && user.role === "student" ? '<li><a href="index.html?view=my-registrations" class="' + (activePage === "my-registrations" ? "active" : "") + '">My Registrations</a></li>' : '') +
-        (user && user.role === "admin" ? '<li><a href="admin.html" class="' + (activePage === "admin" ? "active" : "") + '">Organizer Dashboard</a></li>' : '') +
+        '<li><a href="index.html" class="' + (activePage === "events" ? "active" : "") + '">Browse Slots</a></li>' +
+        (user && user.role === "student" ? '<li><a href="index.html?view=my-registrations" class="' + (activePage === "my-registrations" ? "active" : "") + '">My Bookings</a></li>' : '') +
+        (user && user.role === "admin" ? '<li><a href="admin.html" class="' + (activePage === "admin" ? "active" : "") + '">Owner Dashboard</a></li>' : '') +
         '<li>' + userSectionHtml + '</li>' +
       '</ul>' +
     '</div>';
@@ -85,27 +90,27 @@ function renderFooter() {
       '<div class="footer-content">' +
         '<div class="footer-brand">' +
           '<a href="index.html" class="logo">' +
-            '<span class="logo-badge">CE</span>' +
-            '<span>CampusEvents Portal</span>' +
+            '<span class="logo-badge">BS</span>' +
+            '<span>Barbershop Appointment Portal</span>' +
           '</a>' +
           '<p class="footer-desc">' +
-            'Official event management and registration portal for campus activities, academic workshops, technical hackathons, and sports events.' +
+            'Online appointment scheduling system for modern barbershops. Choose your service, select your preferred barber, and book your grooming slot in seconds.' +
           '</p>' +
         '</div>' +
 
         '<div>' +
           '<div class="footer-title">Quick Links</div>' +
           '<ul class="footer-list">' +
-            '<li><a href="index.html">Browse Events</a></li>' +
-            '<li><a href="index.html?view=my-registrations">My Registrations</a></li>' +
-            '<li><a href="admin.html">Organizer Dashboard</a></li>' +
+            '<li><a href="index.html">Browse Service Slots</a></li>' +
+            '<li><a href="index.html?view=my-registrations">My Bookings</a></li>' +
+            '<li><a href="admin.html">Shop Owner Dashboard</a></li>' +
             '<li><a href="https://github.com/pkneshwanorg-png/campus-event-portal" target="_blank" rel="noopener">GitHub Repository</a></li>' +
           '</ul>' +
         '</div>' +
       '</div>' +
 
       '<div class="footer-bottom">' +
-        '<div>Campus Event Management Portal • CSE326 Web Development</div>' +
+        '<div>Barbershop Appointment & Management Portal • CSE326 Web Development</div>' +
         '<div>Pure Vanilla HTML5 / CSS3 / JavaScript</div>' +
       '</div>' +
     '</div>';
@@ -114,8 +119,8 @@ function renderFooter() {
 // Helper to render reusable empty-state HTML
 function renderEmptyState(options) {
   var icon = options.icon || "";
-  var title = options.title || "No events found";
-  var desc = options.desc || "There are no events to display matching your criteria.";
+  var title = options.title || "No appointment slots found";
+  var desc = options.desc || "There are no slots to display matching your criteria.";
   var actionBtn = options.actionBtn || "";
 
   return (
@@ -137,7 +142,7 @@ function handleLogout() {
   }, 500);
 }
 
-// Render dynamic countdown text (e.g. "Starts in: 3d 4h 12m" or "Event in progress")
+// Render dynamic countdown text (e.g. "Starts in: 3d 4h 12m" or "Slot in progress")
 function calculateCountdown(dateString, timeString) {
   var target = new Date(dateString + " " + (timeString || "00:00"));
   if (isNaN(target.getTime())) {
@@ -147,7 +152,7 @@ function calculateCountdown(dateString, timeString) {
   var diffMs = target.getTime() - now.getTime();
 
   if (diffMs <= 0) {
-    return "Event in progress or concluded";
+    return "Slot in progress or concluded";
   }
 
   var days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -160,7 +165,7 @@ function calculateCountdown(dateString, timeString) {
   return "Starts in: " + hours + "h " + minutes + "m";
 }
 
-// Render a single event card for the list page
+// Render a single service slot card for the browsing page
 function renderEventCard(event) {
   var seats = getSeatsInfo(event.id);
   var percentFilled = Math.round((seats.registered / seats.capacity) * 100);
@@ -170,14 +175,16 @@ function renderEventCard(event) {
   if (percentFilled >= 90) fillClass = "fill-danger";
   else if (percentFilled >= 70) fillClass = "fill-warning";
 
-  var categoryBadgeClass = "badge-" + (event.category ? event.category.toLowerCase() : "tech");
+  var catKey = event.category ? event.category.toLowerCase().replace(/[^a-z0-9]/g, "-") : "haircut";
+  var categoryBadgeClass = "badge-" + catKey;
+  
   var statusBadge = seats.isFull 
-    ? '<span class="event-badge badge-full">Sold Out</span>' 
-    : '<span class="event-badge badge-open">' + seats.left + ' Seats Left</span>';
+    ? '<span class="event-badge badge-full">Fully Booked</span>' 
+    : '<span class="event-badge badge-open">' + seats.left + ' ' + (seats.left === 1 ? 'Slot Left' : 'Slots Left') + '</span>';
 
   var buttonHtml = seats.isFull
-    ? '<button class="btn btn-secondary btn-sm" disabled>Event Full</button>'
-    : '<a href="event.html?id=' + encodeURIComponent(event.id) + '" class="btn btn-primary btn-sm">View & Register</a>';
+    ? '<button class="btn btn-secondary btn-sm" disabled>Slot Full</button>'
+    : '<a href="event.html?id=' + encodeURIComponent(event.id) + '" class="btn btn-primary btn-sm">Book Appointment</a>';
 
   var countdownText = calculateCountdown(event.date, event.time);
 
@@ -185,7 +192,7 @@ function renderEventCard(event) {
     '<div class="event-card">' +
       '<div class="event-card-header">' +
         '<div>' +
-          '<span class="event-badge ' + categoryBadgeClass + '">' + (event.category || "General") + '</span>' +
+          '<span class="event-badge ' + categoryBadgeClass + '">' + (event.category || "Haircut") + '</span>' +
           '<h3 class="event-title">' + event.title + '</h3>' +
         '</div>' +
         statusBadge +
@@ -193,14 +200,14 @@ function renderEventCard(event) {
       '<div class="event-card-body">' +
         '<div class="event-meta">' +
           '<div class="event-meta-item"><span class="event-meta-icon">Date:</span> <div><strong>' + event.date + '</strong> at ' + event.time + '</div></div>' +
-          '<div class="event-meta-item"><span class="event-meta-icon">Venue:</span> <div>' + event.venue + '</div></div>' +
-          '<div class="event-meta-item"><span class="event-meta-icon">For:</span> <div>' + event.eligibility + '</div></div>' +
+          '<div class="event-meta-item"><span class="event-meta-icon">Barber:</span> <div>' + event.venue + '</div></div>' +
+          '<div class="event-meta-item"><span class="event-meta-icon">Notes:</span> <div>' + event.eligibility + '</div></div>' +
         '</div>' +
         '<p class="event-desc">' + event.description + '</p>' +
         '<div class="countdown-box">' + countdownText + '</div>' +
         '<div class="seats-progress">' +
           '<div class="seats-label">' +
-            '<span>Live Capacity</span>' +
+            '<span>Slot Capacity</span>' +
             '<span>' + seats.registered + ' / ' + seats.capacity + ' booked</span>' +
           '</div>' +
           '<div class="progress-bar-bg">' +
@@ -209,7 +216,7 @@ function renderEventCard(event) {
         '</div>' +
       '</div>' +
       '<div class="event-card-footer">' +
-        '<small class="text-muted">' + (seats.isFull ? "Registration closed" : "Seats available") + '</small>' +
+        '<small class="text-muted">' + (seats.isFull ? "No slots available" : "Available now") + '</small>' +
         buttonHtml +
       '</div>' +
     '</div>'

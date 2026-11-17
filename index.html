@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Campus Event Management & Registration Portal</title>
+  <title>Barbershop Appointment & Management Portal</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -15,9 +15,9 @@
   <!-- Hero Welcome Banner -->
   <section class="hero-section">
     <div class="container">
-      <h1 class="hero-title">Upcoming Campus Events</h1>
+      <h1 class="hero-title">Book your haircut online</h1>
       <p class="hero-subtitle">
-        Browse and register for campus events, workshops, technical competitions, and cultural activities.
+        Browse available service slots, select your preferred barber, and schedule your appointment in seconds.
       </p>
     </div>
   </section>
@@ -25,7 +25,7 @@
   <!-- Main Content Container -->
   <main class="container">
 
-    <!-- Normal Event Explorer View -->
+    <!-- Normal Service Slots Explorer View -->
     <div id="events-view">
       <!-- Search and Filter Bar -->
       <section class="filter-bar">
@@ -34,42 +34,44 @@
             type="text" 
             id="search-input" 
             class="filter-input" 
-            placeholder="Search events by title, description, or venue..." 
+            placeholder="Search services or barbers..." 
             oninput="handleFilterChange()"
           >
         </div>
         <div style="flex: 0 1 200px;">
           <select id="category-filter" class="filter-input" onchange="handleFilterChange()">
-            <option value="ALL">All Categories</option>
-            <option value="Technical">Technical</option>
-            <option value="Workshop">Workshop</option>
-            <option value="Cultural">Cultural</option>
-            <option value="Sports">Sports</option>
+            <option value="ALL">All Services</option>
+            <option value="Haircut">Haircut</option>
+            <option value="Beard Trim">Beard Trim</option>
+            <option value="Shave">Shave</option>
+            <option value="Hair Color">Hair Color</option>
+            <option value="Facial">Facial</option>
+            <option value="Combo">Combo</option>
           </select>
         </div>
         <div style="flex: 0 1 200px;">
           <select id="availability-filter" class="filter-input" onchange="handleFilterChange()">
-            <option value="ALL">All Status</option>
-            <option value="OPEN">Available Seats Only</option>
-            <option value="FULL">Sold Out / Full</option>
+            <option value="ALL">All Slots</option>
+            <option value="OPEN">Available Slots Only</option>
+            <option value="FULL">Fully Booked</option>
           </select>
         </div>
       </section>
 
-      <!-- Events Listing Grid -->
+      <!-- Service Slots Listing Grid -->
       <div id="events-container" class="events-grid">
-        <!-- Event cards or empty-state injected dynamically -->
+        <!-- Service slot cards or empty-state injected dynamically -->
       </div>
     </div>
 
-    <!-- Student "My Registrations" View -->
+    <!-- Customer "My Bookings" View -->
     <div id="my-registrations-view" style="display: none; padding: 2.5rem 0;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
         <div>
-          <h2>My Event Registrations</h2>
-          <p class="text-muted" id="student-info-heading">Track your booked tickets and active campus passes.</p>
+          <h2>My Appointments & Bookings</h2>
+          <p class="text-muted" id="student-info-heading">Track your booked appointments and visit passes.</p>
         </div>
-        <a href="index.html" class="btn btn-secondary btn-sm">Back to All Events</a>
+        <a href="index.html" class="btn btn-secondary btn-sm">Back to Service Slots</a>
       </div>
 
       <div id="my-registrations-container">
@@ -77,10 +79,10 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>Ticket ID</th>
-                <th>Event Title</th>
+                <th>Booking ID</th>
+                <th>Service Slot</th>
                 <th>Date & Time</th>
-                <th>Venue</th>
+                <th>Chair / Barber</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -94,24 +96,24 @@
 
   </main>
 
-  <!-- Student Login Modal -->
+  <!-- Customer Login Modal -->
   <div id="student-login-modal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Student Login</h3>
+        <h3 class="modal-title">Customer Login</h3>
         <button class="modal-close" onclick="closeStudentLoginModal()">&times;</button>
       </div>
       <form id="student-login-form" onsubmit="handleStudentLogin(event)">
         <div class="modal-body">
           <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">
-            Enter your college Registration Number to view your registered events or book passes.
+            Enter your 10-digit mobile phone number to view your booked appointments.
           </p>
           <div class="form-group">
-            <label class="form-label" for="login-reg-no">Registration Number (e.g. 123001)</label>
-            <input type="text" id="login-reg-no" class="form-control" placeholder="Enter Registration No." required>
+            <label class="form-label" for="login-reg-no">Phone Number (10 digits)</label>
+            <input type="tel" id="login-reg-no" class="form-control" placeholder="e.g. 9876543210" maxlength="10" required>
           </div>
           <div class="form-group">
-            <label class="form-label" for="login-name">Full Name</label>
+            <label class="form-label" for="login-name">Customer Name</label>
             <input type="text" id="login-name" class="form-control" placeholder="Enter your full name" required>
           </div>
         </div>
@@ -123,19 +125,19 @@
     </div>
   </div>
 
-  <!-- Admin Login Modal -->
+  <!-- Shop Owner Login Modal -->
   <div id="admin-login-modal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Organizer Login</h3>
+        <h3 class="modal-title">Shop Owner Login</h3>
         <button class="modal-close" onclick="closeAdminLoginModal()">&times;</button>
       </div>
       <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
         <div class="modal-body">
           <div style="background-color: var(--bg); padding: 0.85rem 1rem; border-radius: var(--radius); font-size: 0.86rem; margin-bottom: 1.25rem; border: 1px solid var(--border);">
             <strong>Demo Credentials:</strong><br>
-            Username: <code>admin</code><br>
-            Password: <code>admin123</code>
+            Customer: Any 10-digit phone + name<br>
+            Shop Owner: <code>admin</code> / <code>admin123</code>
           </div>
           <div class="form-group">
             <label class="form-label" for="admin-user">Username</label>
@@ -148,7 +150,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="closeAdminLoginModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Sign In</button>
+          <button type="submit" class="btn btn-primary">Sign In as Owner</button>
         </div>
       </form>
     </div>
@@ -169,7 +171,7 @@
   <script>
     // Initialize page on load
     document.addEventListener("DOMContentLoaded", function() {
-      // Check if URL query asks for "my-registrations" view
+      // Check if URL query asks for "my-registrations" (My Bookings) view
       var urlParams = new URLSearchParams(window.location.search);
       var view = urlParams.get("view");
 
@@ -185,20 +187,20 @@
       renderFooter();
     });
 
-    // Render filtered list of events into the grid
+    // Render filtered list of service slots into the grid
     function renderEventsList() {
       var container = document.getElementById("events-container");
       if (!container) return;
 
       var allEvents = getAllEvents();
 
-      // Absolute empty state if no events exist in storage
+      // Absolute empty state if no slots exist in storage
       if (allEvents.length === 0) {
         container.innerHTML = renderEmptyState({
           icon: "",
-          title: "No events yet",
-          desc: "There are currently no events published. Log in as an Organizer to create new events.",
-          actionBtn: '<button class="btn btn-primary btn-sm" onclick="openAdminLoginModal()">Organizer Login</button>'
+          title: "No appointment slots yet",
+          desc: "There are currently no slots published. Log in as Shop Owner to add new service slots.",
+          actionBtn: '<button class="btn btn-primary btn-sm" onclick="openAdminLoginModal()">Shop Owner Login</button>'
         });
         return;
       }
@@ -234,8 +236,8 @@
       if (filtered.length === 0) {
         container.innerHTML = renderEmptyState({
           icon: "",
-          title: "No events match your criteria",
-          desc: "No events match the selected search keywords or filters. Try adjusting your search.",
+          title: "No service slots match your search",
+          desc: "We could not find any appointment slots matching your search criteria. Try clearing filters.",
           actionBtn: '<button class="btn btn-secondary btn-sm" onclick="resetFilters()">Reset Filters</button>'
         });
         return;
@@ -261,7 +263,7 @@
       renderEventsList();
     }
 
-    // Switch view to display Student Registrations
+    // Switch view to display Customer Bookings
     function showMyRegistrationsView() {
       var user = getCurrentUser();
       if (!user || user.role !== "student") {
@@ -272,7 +274,7 @@
       document.getElementById("events-view").style.display = "none";
       document.getElementById("my-registrations-view").style.display = "block";
       document.getElementById("student-info-heading").textContent = 
-        "Showing registered events for " + user.name + " (Reg No: " + user.regNo + ")";
+        "Showing booked appointments for " + user.name + " (Phone: " + user.regNo + ")";
 
       var container = document.getElementById("my-registrations-container");
       var registrations = getRegistrationsByStudent(user.regNo);
@@ -280,9 +282,9 @@
       if (registrations.length === 0) {
         container.innerHTML = renderEmptyState({
           icon: "",
-          title: "No event registrations yet",
-          desc: "You have not registered for any events yet. Browse available campus events to register.",
-          actionBtn: '<a href="index.html" class="btn btn-primary btn-sm">Browse Events</a>'
+          title: "No appointment bookings yet",
+          desc: "You have not booked any appointments yet. Browse our available service slots to schedule your haircut!",
+          actionBtn: '<a href="index.html" class="btn btn-primary btn-sm">Browse Service Slots</a>'
         });
         return;
       }
@@ -292,10 +294,10 @@
           '<table class="data-table">' +
             '<thead>' +
               '<tr>' +
-                '<th>Ticket ID</th>' +
-                '<th>Event Title</th>' +
+                '<th>Booking ID</th>' +
+                '<th>Service Slot</th>' +
                 '<th>Date & Time</th>' +
-                '<th>Venue</th>' +
+                '<th>Chair / Barber</th>' +
                 '<th>Action</th>' +
               '</tr>' +
             '</thead>' +
@@ -303,7 +305,7 @@
 
       for (var i = 0; i < registrations.length; i++) {
         var reg = registrations[i];
-        var event = getEventById(reg.eventId) || { title: "Unknown Event", date: "N/A", time: "N/A", venue: "N/A" };
+        var event = getEventById(reg.eventId) || { title: "Unknown Slot", date: "N/A", time: "N/A", venue: "N/A" };
         tableHtml += 
           '<tr>' +
             '<td><strong><code>' + reg.ticketId + '</code></strong></td>' +
@@ -312,8 +314,8 @@
             '<td>' + event.venue + '</td>' +
             '<td>' +
               '<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">' +
-                '<a href="event.html?id=' + encodeURIComponent(reg.eventId) + '&ticketId=' + encodeURIComponent(reg.ticketId) + '" class="btn btn-secondary btn-sm">View Ticket</a>' +
-                '<button class="btn btn-danger btn-sm" onclick="handleCancelMyRegistration(\'' + reg.ticketId + '\')">Cancel</button>' +
+                '<a href="event.html?id=' + encodeURIComponent(reg.eventId) + '&ticketId=' + encodeURIComponent(reg.ticketId) + '" class="btn btn-secondary btn-sm">View Booking</a>' +
+                '<button class="btn btn-danger btn-sm" onclick="handleCancelMyRegistration(\'' + reg.ticketId + '\')">Cancel Booking</button>' +
               '</div>' +
             '</td>' +
           '</tr>';
@@ -323,9 +325,9 @@
       container.innerHTML = tableHtml;
     }
 
-    // Handle student cancelling their registration
+    // Handle customer cancelling their appointment booking
     function handleCancelMyRegistration(ticketId) {
-      if (!confirm("Are you sure you want to cancel this registration? Your seat will be freed up for other students.")) {
+      if (!confirm("Are you sure you want to cancel this appointment booking? Your slot will be freed up for other customers.")) {
         return;
       }
       var res = cancelRegistration(ticketId);
@@ -355,17 +357,23 @@
     // Form handlers
     function handleStudentLogin(e) {
       e.preventDefault();
-      var regNo = document.getElementById("login-reg-no").value.trim();
+      var rawPhone = document.getElementById("login-reg-no").value.trim();
+      var cleanPhone = rawPhone.replace(/\D/g, "");
       var name = document.getElementById("login-name").value.trim();
 
-      if (!regNo || !name) {
-        showToast("Please provide both Registration No and Name", "danger");
+      if (cleanPhone.length !== 10) {
+        showToast("Please enter a valid 10-digit mobile phone number", "danger");
+        return;
+      }
+
+      if (!name) {
+        showToast("Please enter your name", "danger");
         return;
       }
 
       setCurrentUser({
         role: "student",
-        regNo: regNo,
+        regNo: cleanPhone,
         name: name
       });
 
@@ -383,14 +391,14 @@
 
       // Demo login check
       if (u === "admin" && p === "admin123") {
-        setCurrentUser({ role: "admin", name: "Campus Organizer" });
+        setCurrentUser({ role: "admin", name: "Shop Owner" });
         closeAdminLoginModal();
-        showToast("Signed in as Administrator", "success");
+        showToast("Signed in as Shop Owner", "success");
         setTimeout(function() {
           window.location.href = "admin.html";
         }, 500);
       } else {
-        showToast("Invalid credentials! Demo username is admin, password is admin123", "danger");
+        showToast("Invalid credentials! Shop Owner login: admin / admin123", "danger");
       }
     }
   </script>

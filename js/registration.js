@@ -1,52 +1,64 @@
 /**
  * registration.js
- * Handles student registration, duplicate prevention, seat limit validation,
- * cancellation, and ticket retrieval.
+ * Handles customer appointment booking, duplicate booking prevention, slot limit validation,
+ * cancellation, and booking confirmation retrieval.
+ * 
+ * BARBERSHOP CONTEXT MAPPING:
+ * - 'registerStudent' -> Book appointment for a customer.
+ * - 'regNo' -> 10-digit Customer Phone Number.
+ * - 'studentData' -> Customer Booking Data.
+ * - 'ticketId' -> Booking Confirmation Number (starts with 'BK-').
  */
 
-// Check if a student with given regNo is already registered for an event
+// Check if a customer with given phone number is already booked for a service slot
 function isStudentAlreadyRegistered(eventId, regNo) {
   var registrations = getStoredRegistrations();
-  var normalizedReg = String(regNo).trim().toLowerCase();
+  var normalizedReg = String(regNo).replace(/\D/g, "");
   for (var i = 0; i < registrations.length; i++) {
     var item = registrations[i];
-    if (item.eventId === eventId && String(item.regNo).trim().toLowerCase() === normalizedReg) {
+    if (item.eventId === eventId && String(item.regNo).replace(/\D/g, "") === normalizedReg) {
       return true;
     }
   }
   return false;
 }
 
-// Register student for an event with strict validation
+// Book appointment for a customer with strict slot and phone number validation
 function registerStudent(studentData) {
   var eventId = studentData.eventId;
   var regNo = studentData.regNo;
   var name = studentData.name;
   var email = studentData.email;
 
-  // 1. Check if event exists
+  // 1. Check if service slot exists
   var event = getEventById(eventId);
   if (!event) {
-    return { success: false, message: "Event not found." };
+    return { success: false, message: "Service slot not found." };
   }
 
-  // 2. Check seat availability (Strict: never allow over-registration)
+  // 2. Validate 10-digit phone number
+  var cleanPhone = String(regNo).replace(/\D/g, "");
+  if (cleanPhone.length !== 10) {
+    return { success: false, message: "Please provide a valid 10-digit mobile number." };
+  }
+
+  // 3. Check slot availability (Strict: never allow over-booking)
   var seats = getSeatsInfo(eventId);
   if (seats.isFull || seats.left <= 0) {
-    return { success: false, message: "Sorry, this event is already full! No seats left." };
+    return { success: false, message: "Sorry, this slot is fully booked! No slots left." };
   }
 
-  // 3. Prevent duplicate registration
-  if (isStudentAlreadyRegistered(eventId, regNo)) {
-    return { success: false, message: "You are already registered for this event with Reg. No. " + regNo + "!" };
+  // 4. Prevent duplicate booking for the same slot with same phone
+  if (isStudentAlreadyRegistered(eventId, cleanPhone)) {
+    return { success: false, message: "You already have a booking for this slot with Phone No. " + cleanPhone + "!" };
   }
 
-  // 4. Create new registration entry
-  var newTicketId = "TCK-" + Math.floor(100000 + Math.random() * 900000);
+  // 5. Create new booking record with BK- prefix
+  var newTicketId = "BK-" + Math.floor(100000 + Math.random() * 900000);
   var registrationRecord = {
     ticketId: newTicketId,
     eventId: eventId,
-    regNo: String(regNo).trim(),
+    regNo: cleanPhone,
     name: name.trim(),
     email: email.trim(),
     registeredAt: new Date().toISOString()
@@ -58,12 +70,12 @@ function registerStudent(studentData) {
 
   return {
     success: true,
-    message: "Registration successful! Your ticket has been generated.",
+    message: "Booking confirmed! Your appointment has been scheduled.",
     registration: registrationRecord
   };
 }
 
-// Cancel a registration by ticketId (frees up the seat immediately)
+// Cancel a booking by ticketId (frees up the slot immediately)
 function cancelRegistration(ticketId) {
   var registrations = getStoredRegistrations();
   var initialLength = registrations.length;
@@ -77,26 +89,26 @@ function cancelRegistration(ticketId) {
 
   if (updated.length < initialLength) {
     saveStoredRegistrations(updated);
-    return { success: true, message: "Registration cancelled successfully. The seat has been released." };
+    return { success: true, message: "Booking cancelled successfully. The slot has been released." };
   }
-  return { success: false, message: "Registration ticket not found." };
+  return { success: false, message: "Booking confirmation not found." };
 }
 
-// Retrieve all registrations made by a specific student regNo
+// Retrieve all bookings made by a specific customer phone number
 function getRegistrationsByStudent(regNo) {
   var registrations = getStoredRegistrations();
-  var normalizedReg = String(regNo).trim().toLowerCase();
+  var normalizedReg = String(regNo).replace(/\D/g, "");
   var studentRegs = [];
 
   for (var i = 0; i < registrations.length; i++) {
-    if (String(registrations[i].regNo).trim().toLowerCase() === normalizedReg) {
+    if (String(registrations[i].regNo).replace(/\D/g, "") === normalizedReg) {
       studentRegs.push(registrations[i]);
     }
   }
   return studentRegs;
 }
 
-// Retrieve a specific registration by its ticketId
+// Retrieve a specific booking by its ticketId
 function getRegistrationByTicketId(ticketId) {
   var registrations = getStoredRegistrations();
   for (var i = 0; i < registrations.length; i++) {
@@ -106,4 +118,3 @@ function getRegistrationByTicketId(ticketId) {
   }
   return null;
 }
-

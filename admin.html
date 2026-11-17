@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Organizer & Admin Dashboard - Campus Events</title>
+  <title>Shop Owner Dashboard - Barbershop Portal</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/style.css">
   <!-- Chart.js from CDN for analytics -->
@@ -19,52 +19,52 @@
     <!-- Dashboard Header Title & Action -->
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem;">
       <div>
-        <h1 style="font-size: 1.85rem; font-weight: 600;">Organizer Dashboard</h1>
-        <p class="text-muted" style="margin-top: 0.2rem;">Manage campus events, track registrations in real-time, and download participant lists.</p>
+        <h1 style="font-size: 1.85rem; font-weight: 600;">Shop Owner Dashboard</h1>
+        <p class="text-muted" style="margin-top: 0.2rem;">Manage service slots, track customer bookings in real-time, and download client appointment lists.</p>
       </div>
-      <button class="btn btn-primary" onclick="openCreateEventModal()">+ Create New Event</button>
+      <button class="btn btn-primary" onclick="openCreateEventModal()">+ Add New Service Slot</button>
     </div>
 
     <!-- Quick Stats Metric Cards -->
     <section class="stats-grid">
       <div class="stat-card">
-        <div class="stat-label">Total Events</div>
+        <div class="stat-label">Total Service Slots</div>
         <div class="stat-value" id="stat-total-events">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Total Registrations</div>
+        <div class="stat-label">Total Bookings</div>
         <div class="stat-value" id="stat-total-regs">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Total Seat Capacity</div>
+        <div class="stat-label">Total Slot Capacity</div>
         <div class="stat-value" id="stat-total-capacity">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Overall Occupancy</div>
+        <div class="stat-label">Overall Slot Occupancy</div>
         <div class="stat-value" id="stat-occupancy-rate">0%</div>
       </div>
     </section>
 
     <!-- Visual Chart Section -->
     <section style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 2.25rem; box-shadow: var(--shadow);">
-      <h3 style="margin-bottom: 1rem; font-size: 1.15rem; font-weight: 600;">Seats Filled per Event</h3>
+      <h3 style="margin-bottom: 1rem; font-size: 1.15rem; font-weight: 600;">Bookings per Service Slot</h3>
       <div style="position: relative; height: 280px; width: 100%;">
         <canvas id="seatsChart"></canvas>
       </div>
     </section>
 
-    <!-- Manage Events Table -->
+    <!-- Manage Service Slots Table -->
     <section style="margin-bottom: 2.5rem;">
-      <h3 style="margin-bottom: 1rem; font-size: 1.2rem; font-weight: 600;">All Campus Events</h3>
+      <h3 style="margin-bottom: 1rem; font-size: 1.2rem; font-weight: 600;">All Service Slots</h3>
       <div class="table-responsive">
         <table class="data-table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Category</th>
+              <th>Service & Barber</th>
+              <th>Service Type</th>
               <th>Date & Time</th>
-              <th>Venue</th>
-              <th>Seats Status</th>
+              <th>Chair / Barber</th>
+              <th>Booking Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -75,16 +75,16 @@
       </div>
     </section>
 
-    <!-- Participants Directory & Export Section -->
+    <!-- Customer Bookings Directory & Export Section -->
     <section style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; box-shadow: var(--shadow);">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.35rem;">
         <div>
-          <h3 style="font-size: 1.2rem; font-weight: 600;">Registered Participants Directory</h3>
-          <p class="text-muted" style="font-size: 0.88rem; margin-top: 0.2rem;">Filter by event to view attendees or download CSV for attendance rolls.</p>
+          <h3 style="font-size: 1.2rem; font-weight: 600;">Customer Bookings Directory</h3>
+          <p class="text-muted" style="font-size: 0.88rem; margin-top: 0.2rem;">Filter by service slot to view booked customers or download CSV for shop records.</p>
         </div>
         <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
           <select id="export-event-select" class="form-control" style="width: auto; min-width: 200px;" onchange="handleParticipantFilterChange()">
-            <option value="ALL">All Events (Consolidated)</option>
+            <option value="ALL">All Service Slots (Consolidated)</option>
           </select>
           <button class="btn btn-success btn-sm" onclick="exportParticipantsToCSV()">Export as CSV</button>
         </div>
@@ -94,11 +94,11 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th>Ticket ID</th>
-              <th>Reg. Number</th>
-              <th>Student Name</th>
+              <th>Booking ID</th>
+              <th>Phone Number</th>
+              <th>Customer Name</th>
               <th>Email</th>
-              <th>Event Title</th>
+              <th>Service Slot</th>
               <th>Booked At</th>
             </tr>
           </thead>
@@ -111,11 +111,11 @@
 
   </main>
 
-  <!-- Create / Edit Event Modal -->
+  <!-- Create / Edit Service Slot Modal -->
   <div id="event-modal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="event-modal-title">Create New Event</h3>
+        <h3 class="modal-title" id="event-modal-title">Create New Service Slot</h3>
         <button class="modal-close" onclick="closeEventModal()">&times;</button>
       </div>
       <form id="event-editor-form" onsubmit="handleSaveEvent(event)">
@@ -123,55 +123,57 @@
           <input type="hidden" id="form-event-id">
 
           <div class="form-group">
-            <label class="form-label" for="form-title">Event Title *</label>
-            <input type="text" id="form-title" class="form-control" placeholder="e.g. National Hackathon 2026" required>
+            <label class="form-label" for="form-title">Service Title & Barber *</label>
+            <input type="text" id="form-title" class="form-control" placeholder="e.g. Classic Haircut & Styling with Rahul" required>
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
-              <label class="form-label" for="form-category">Category *</label>
+              <label class="form-label" for="form-category">Service Type *</label>
               <select id="form-category" class="form-control" required>
-                <option value="Technical">Technical</option>
-                <option value="Workshop">Workshop</option>
-                <option value="Cultural">Cultural</option>
-                <option value="Sports">Sports</option>
+                <option value="Haircut">Haircut</option>
+                <option value="Beard Trim">Beard Trim</option>
+                <option value="Shave">Shave</option>
+                <option value="Hair Color">Hair Color</option>
+                <option value="Facial">Facial</option>
+                <option value="Combo">Combo</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label" for="form-capacity">Total Capacity (Seats) *</label>
-              <input type="number" id="form-capacity" class="form-control" min="1" max="1000" placeholder="50" required>
+              <label class="form-label" for="form-capacity">Slot Capacity (Chairs/Clients) *</label>
+              <input type="number" id="form-capacity" class="form-control" min="1" max="10" placeholder="2" required>
             </div>
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
-              <label class="form-label" for="form-date">Event Date *</label>
+              <label class="form-label" for="form-date">Slot Date *</label>
               <input type="date" id="form-date" class="form-control" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="form-time">Time (e.g. 10:00 AM) *</label>
+              <label class="form-label" for="form-time">Slot Time (e.g. 10:00 AM) *</label>
               <input type="text" id="form-time" class="form-control" placeholder="10:00 AM" required>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="form-venue">Venue *</label>
-            <input type="text" id="form-venue" class="form-control" placeholder="Auditorium / Lab / Ground" required>
+            <label class="form-label" for="form-venue">Chair / Barber *</label>
+            <input type="text" id="form-venue" class="form-control" placeholder="e.g. Chair 1 - Master Barber Rahul" required>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="form-eligibility">Eligibility *</label>
-            <input type="text" id="form-eligibility" class="form-control" placeholder="e.g. Open to all branches" required>
+            <label class="form-label" for="form-eligibility">Requirements / Notes *</label>
+            <input type="text" id="form-eligibility" class="form-control" placeholder="e.g. Arrive 5 mins prior; walk-ins not accepted" required>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="form-desc">Description *</label>
-            <textarea id="form-desc" class="form-control" rows="3" placeholder="Provide event schedule and overview..." required></textarea>
+            <label class="form-label" for="form-desc">Service Description & Price *</label>
+            <textarea id="form-desc" class="form-control" rows="3" placeholder="Provide service overview and price (e.g. Rs. 250)..." required></textarea>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="save-event-submit-btn">Save Event</button>
+          <button type="submit" class="btn btn-primary" id="save-event-submit-btn">Save Service Slot</button>
         </div>
       </form>
     </div>
@@ -195,7 +197,7 @@
       // Role enforcement: ensure user is admin
       var user = getCurrentUser();
       if (!user || user.role !== "admin") {
-        setCurrentUser({ role: "admin", name: "Campus Organizer" });
+        setCurrentUser({ role: "admin", name: "Shop Owner" });
       }
 
       renderNavbar("admin");
@@ -230,7 +232,7 @@
       document.getElementById("stat-occupancy-rate").textContent = rate + "%";
     }
 
-    // Render Events Management Table
+    // Render Service Slots Management Table
     function renderEventsTable() {
       var tbody = document.getElementById("admin-events-tbody");
       var events = getAllEvents();
@@ -240,9 +242,9 @@
           '<tr><td colspan="6">' +
             renderEmptyState({
               icon: "",
-              title: "No events yet",
-              desc: "Get started by creating your first campus event.",
-              actionBtn: '<button class="btn btn-primary btn-sm" onclick="openCreateEventModal()">+ Create Event</button>'
+              title: "No service slots yet",
+              desc: "Get started by creating your first service appointment slot.",
+              actionBtn: '<button class="btn btn-primary btn-sm" onclick="openCreateEventModal()">+ Add Service Slot</button>'
             }) +
           '</td></tr>';
         return;
@@ -253,13 +255,15 @@
         var ev = events[i];
         var seats = getSeatsInfo(ev.id);
         var seatBadge = seats.isFull
-          ? '<span class="event-badge badge-full">Full (' + seats.registered + '/' + seats.capacity + ')</span>'
+          ? '<span class="event-badge badge-full">Booked (' + seats.registered + '/' + seats.capacity + ')</span>'
           : '<span class="event-badge badge-open">' + seats.registered + ' / ' + seats.capacity + ' booked (' + seats.left + ' left)</span>';
+
+        var catKey = ev.category ? ev.category.toLowerCase().replace(/[^a-z0-9]/g, "-") : "haircut";
 
         rows += 
           '<tr>' +
             '<td><strong>' + ev.title + '</strong></td>' +
-            '<td><span class="event-badge">' + ev.category + '</span></td>' +
+            '<td><span class="event-badge badge-' + catKey + '">' + ev.category + '</span></td>' +
             '<td>' + ev.date + ' at ' + ev.time + '</td>' +
             '<td>' + ev.venue + '</td>' +
             '<td>' + seatBadge + '</td>' +
@@ -274,13 +278,13 @@
       tbody.innerHTML = rows;
     }
 
-    // Populate the dropdown to filter participants by event
+    // Populate the dropdown to filter bookings by service slot
     function populateEventDropdown() {
       var select = document.getElementById("export-event-select");
       var events = getAllEvents();
       var currentVal = select.value || "ALL";
 
-      var opts = '<option value="ALL">All Events (Consolidated)</option>';
+      var opts = '<option value="ALL">All Service Slots (Consolidated)</option>';
       for (var i = 0; i < events.length; i++) {
         opts += '<option value="' + events[i].id + '">' + events[i].title + '</option>';
       }
@@ -288,7 +292,7 @@
       select.value = currentVal;
     }
 
-    // Render registered participants list
+    // Render registered customers list
     function renderParticipantsTable() {
       var tbody = document.getElementById("admin-participants-tbody");
       var selectedEventId = document.getElementById("export-event-select").value;
@@ -306,8 +310,8 @@
           '<tr><td colspan="6">' +
             renderEmptyState({
               icon: "",
-              title: "No participants registered yet",
-              desc: "No student registrations found for this filter selection."
+              title: "No customer bookings yet",
+              desc: "No customer bookings found for this filter selection."
             }) +
           '</td></tr>';
         return;
@@ -316,7 +320,7 @@
       var rows = "";
       for (var j = 0; j < filtered.length; j++) {
         var r = filtered[j];
-        var ev = getEventById(r.eventId) || { title: "Deleted Event" };
+        var ev = getEventById(r.eventId) || { title: "Deleted Slot" };
         var formattedDate = r.registeredAt ? new Date(r.registeredAt).toLocaleDateString() : "N/A";
 
         rows += 
@@ -340,7 +344,7 @@
     function openCreateEventModal() {
       document.getElementById("event-editor-form").reset();
       document.getElementById("form-event-id").value = "";
-      document.getElementById("event-modal-title").textContent = "Create New Event";
+      document.getElementById("event-modal-title").textContent = "Create New Service Slot";
       document.getElementById("event-modal").classList.add("active");
     }
 
@@ -358,7 +362,7 @@
       document.getElementById("form-eligibility").value = ev.eligibility;
       document.getElementById("form-desc").value = ev.description;
 
-      document.getElementById("event-modal-title").textContent = "Edit Event Details";
+      document.getElementById("event-modal-title").textContent = "Edit Service Slot Details";
       document.getElementById("event-modal").classList.add("active");
     }
 
@@ -366,7 +370,7 @@
       document.getElementById("event-modal").classList.remove("active");
     }
 
-    // Save or update event
+    // Save or update service slot
     function handleSaveEvent(e) {
       e.preventDefault();
       var id = document.getElementById("form-event-id").value;
@@ -384,16 +388,16 @@
       if (id) {
         var updateRes = updateEvent(id, eventData);
         if (updateRes) {
-          showToast("Event updated successfully!", "success");
+          showToast("Service slot updated successfully!", "success");
         } else {
-          showToast("Failed to update event.", "danger");
+          showToast("Failed to update service slot.", "danger");
         }
       } else {
         var createRes = createEvent(eventData);
         if (createRes) {
-          showToast("Event created successfully!", "success");
+          showToast("Service slot created successfully!", "success");
         } else {
-          showToast("Failed to create event.", "danger");
+          showToast("Failed to create service slot.", "danger");
         }
       }
 
@@ -401,17 +405,17 @@
       refreshDashboard();
     }
 
-    // Delete Event
+    // Delete Service Slot
     function handleDeleteEvent(eventId) {
-      if (!confirm("Are you sure you want to delete this event? All associated registrations will also be removed.")) {
+      if (!confirm("Are you sure you want to delete this service slot? All associated customer bookings will also be removed.")) {
         return;
       }
       deleteEvent(eventId);
-      showToast("Event deleted successfully.", "success");
+      showToast("Service slot deleted successfully.", "success");
       refreshDashboard();
     }
 
-    // Render Chart.js Stacked Bar Chart for Seat Analytics (Flat institutional palette)
+    // Render Chart.js Stacked Bar Chart for Slot Analytics
     function renderSeatsChart() {
       var events = getAllEvents();
       var labels = [];
@@ -438,13 +442,13 @@
           labels: labels,
           datasets: [
             {
-              label: "Booked Seats",
+              label: "Booked Slots",
               data: bookedData,
               backgroundColor: "#1F3A5F",
               borderRadius: 4
             },
             {
-              label: "Available Seats",
+              label: "Available Slots",
               data: availableData,
               backgroundColor: "#D9DEE7",
               borderRadius: 4
@@ -472,7 +476,7 @@
       });
     }
 
-    // Export Participants as CSV file
+    // Export Customer Bookings as CSV file
     function exportParticipantsToCSV() {
       var selectedEventId = document.getElementById("export-event-select").value;
       var registrations = getStoredRegistrations();
@@ -485,12 +489,12 @@
       }
 
       if (filtered.length === 0) {
-        showToast("No participant data to export!", "warning");
+        showToast("No customer booking data to export!", "warning");
         return;
       }
 
       var csvRows = [];
-      csvRows.push(["Ticket ID", "Registration No", "Student Name", "Email", "Event Title", "Date Registered"].join(","));
+      csvRows.push(["Booking ID", "Phone Number", "Customer Name", "Email", "Service Slot", "Date Booked"].join(","));
 
       for (var j = 0; j < filtered.length; j++) {
         var r = filtered[j];
@@ -513,7 +517,7 @@
       var url = URL.createObjectURL(blob);
       var link = document.createElement("a");
       link.setAttribute("href", url);
-      link.setAttribute("download", "campus_event_participants_" + Date.now() + ".csv");
+      link.setAttribute("download", "barbershop_bookings_" + Date.now() + ".csv");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
